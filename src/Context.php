@@ -90,7 +90,7 @@ class Context
     {
         $arguments = $this->getCommandArguments();
 
-        $options = new Getopt($rules, $arguments);
+        $options = new Getopt($rules, $arguments->toArray());
         $options->parse();
 
         return $options;
