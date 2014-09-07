@@ -15,7 +15,7 @@ use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapper;
 use coverallskit\HelpException;
 use coverallskit\RequireException;
-use coverallskit\FailureException:
+use coverallskit\FailureException;
 
 
 /**
