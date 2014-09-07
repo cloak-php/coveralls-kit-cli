@@ -18,7 +18,7 @@ use Zend\Console\Getopt;
  * Class Context
  * @package coverallskit
  */
-class Context
+class Context implements ContextInterface
 {
 
     const SCRIPT_NAME_KEY = 0;

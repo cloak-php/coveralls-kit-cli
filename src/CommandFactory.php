@@ -18,7 +18,7 @@ use coverallskit\command\CommandNotFoundException;
  * Class CommandFactory
  * @package coverallskit
  */
-class CommandFactory
+class CommandFactory implements CommandFactoryInterface
 {
 
     /**
@@ -35,10 +35,10 @@ class CommandFactory
     }
 
     /**
-     * @param Context $context
+     * @param ContextInterface $context
      * @return \coverallskit\CommandInterface
      */
-    public function createFromContext(Context $context)
+    public function createFromContext(ContextInterface $context)
     {
         $commandName = $context->getCommandName();
 
