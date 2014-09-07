@@ -13,6 +13,7 @@ namespace coverallskit;
 
 use ReflectionClass;
 use coverallskit\command\CommandNotFoundException;
+use PhpCollection\Map;
 
 /**
  * Class CommandFactory
@@ -22,7 +23,7 @@ class CommandFactory implements CommandFactoryInterface
 {
 
     /**
-     * @var array
+     * @var \PhpCollection\Map
      */
     private $commands;
 
@@ -31,7 +32,7 @@ class CommandFactory implements CommandFactoryInterface
      */
     public function __construct(array $commands)
     {
-        $this->commands = $commands;
+        $this->commands = new Map($commands);
     }
 
     /**
@@ -42,12 +43,12 @@ class CommandFactory implements CommandFactoryInterface
     {
         $commandName = $context->getCommandName();
 
-        if (isset($this->commands[$commandName]) === false) {
+        if ($this->commands->containsKey($commandName) === false) {
             throw new CommandNotFoundException("'$commandName' command does not exist");
         }
 
-        $className = $this->commands[$commandName];
-        $classReflection = new ReflectionClass($className);
+        $className = $this->commands->get($commandName);
+        $classReflection = new ReflectionClass($className->get());
 
         $command = $classReflection->newInstanceArgs([ $context ]);
 

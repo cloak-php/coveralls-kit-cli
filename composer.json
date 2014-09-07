@@ -9,7 +9,8 @@
     "bin": [ "bin/coverallskit" ],
     "require": {
         "php": ">=5.5.0",
-        "zendframework/zend-console": "2.3.*"
+        "zendframework/zend-console": "2.3.*",
+        "phpcollection/phpcollection": "0.4.*"
     },
     "require-dev": {
         "danielstjules/pho": "dev-master",
