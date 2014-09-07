@@ -33,16 +33,25 @@ class ConsoleWrapper implements ConsoleWrapperInterface
         $this->console = ZendConole::getInstance();
     }
 
+    /**
+     * @param string $text
+     */
     public function writeMessage($text = "")
     {
         $this->console->writeLine($text);
     }
 
+    /**
+     * @param string $text
+     */
     public function writeFailureMessage($text = "")
     {
         $this->console->writeLine($text, Color::RED);
     }
 
+    /**
+     * @param string $text
+     */
     public function writeSuccessMessage($text = "")
     {
         $this->console->writeLine($text, Color::GREEN);
