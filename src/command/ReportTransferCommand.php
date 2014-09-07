@@ -12,7 +12,7 @@
 namespace coverallskit\command;
 
 use coverallskit\AbstractCommand;
-use coverallskit\ConsoleWrapper;
+use coverallskit\ConsoleWrapperInterface;
 use coverallskit\HelpException;
 use coverallskit\RequireException;
 use coverallskit\FailureException;
@@ -35,7 +35,7 @@ class ReportTransferCommand extends AbstractCommand
     ];
 
 
-    public function execute(ConsoleWrapper $console)
+    public function execute(ConsoleWrapperInterface $console)
     {
         if ($this->options->help) {
             throw new HelpException($this->getUsageMessage());

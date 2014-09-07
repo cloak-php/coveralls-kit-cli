@@ -26,6 +26,6 @@ interface CommandInterface
     /**
      * @throws FailureException
      */
-    public function execute(ConsoleWrapper $console);
+    public function execute(ConsoleWrapperInterface $console);
 
 }

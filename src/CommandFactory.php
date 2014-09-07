@@ -25,12 +25,12 @@ class CommandFactory
      */
     private $commands;
 
-
-    public function __construct()
+    /**
+     * @param array $commands
+     */
+    public function __construct(array $commands)
     {
-        $this->commands = [
-            'transfer' => 'cli\ReportTransferCommand'
-        ];
+        $this->commands = $commands;
     }
 
     /**

@@ -8,6 +8,7 @@
     ],
     "bin": [ "bin/coverallskit" ],
     "require": {
+        "php": ">=5.5.0",
         "zendframework/zend-console": "2.3.*"
     },
     "require-dev": {
@@ -23,5 +24,9 @@
     ],
     "autoload": {
         "psr-4": { "coverallskit\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "coverallskit\\spec\\fixture\\": "spec/fixtures/" }
     }
 }
+
