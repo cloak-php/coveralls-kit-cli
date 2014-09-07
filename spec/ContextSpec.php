@@ -3,7 +3,6 @@
 namespace coverallskit\spec;
 
 use coverallskit\Context;
-use Exception;
 use Zend\Stdlib\Parameters;
 use Zend\Console\Getopt;
 
