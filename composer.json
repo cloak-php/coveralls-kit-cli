@@ -1,0 +1,27 @@
+{
+    "name": "cloak-php/coverallskit-cli",
+    "type": "library",
+    "description": "",
+    "version": "1.0.0",
+    "keywords": [
+        "coveralls", "code coverage", "report"
+    ],
+    "bin": [ "bin/coverallskit" ],
+    "require": {
+        "zendframework/zend-console": "2.3.*"
+    },
+    "require-dev": {
+        "danielstjules/pho": "dev-master",
+        "jaz303/phake": "0.6.*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Noritaka Horio",
+            "email": "holy.shared.design@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "coverallskit\\": "src/" }
+    }
+}
