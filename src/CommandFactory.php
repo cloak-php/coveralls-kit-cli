@@ -12,6 +12,7 @@
 namespace coverallskit;
 
 use ReflectionClass;
+use coverallskit\command\CommandNotFoundException;
 
 /**
  * Class CommandFactory
@@ -35,13 +36,14 @@ class CommandFactory
 
     /**
      * @param Context $context
-     * @return object
+     * @return \coverallskit\CommandInterface
      */
     public function createFromContext(Context $context)
     {
         $commandName = $context->getCommandName();
 
         if (isset($this->commands[$commandName]) === false) {
+            throw new CommandNotFoundException("'$commandName' command does not exist");
         }
 
         $className = $this->commands[$commandName];
