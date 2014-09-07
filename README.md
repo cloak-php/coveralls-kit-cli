@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/cloak-php/coveralls-kit-cli.png?label=ready&title=Ready)](https://waffle.io/cloak-php/coveralls-kit-cli)
 coveralls-kit-cli
 =================
 
