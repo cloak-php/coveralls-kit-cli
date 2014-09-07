@@ -14,7 +14,8 @@
     },
     "require-dev": {
         "danielstjules/pho": "dev-master",
-        "jaz303/phake": "0.6.*"
+        "jaz303/phake": "0.6.*",
+        "phpspec/prophecy": "1.2.*"
     },
     "license": "MIT",
     "authors": [

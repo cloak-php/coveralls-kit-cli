@@ -35,7 +35,7 @@ abstract class AbstractCommand implements CommandInterface
     /**
      * @param Context $context
      */
-    public function __construct(Context $context)
+    public function __construct(ContextInterface $context)
     {
         $this->context = $context;
         $this->options = $context->getCommandOptions($this->getRules());
