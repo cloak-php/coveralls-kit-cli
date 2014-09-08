@@ -29,11 +29,10 @@ class ReportTransferCommand extends AbstractCommand
      * @var array
      */
     protected $rules = [
-        'config|c=s' => 'Configration file path',
-        'debug|d-s' => 'debug',
-        'help|h-s' => 'help',
+        'config|c=s' => 'Read configuration from YAML file.',
+        'debug|d-s' => 'Only generate a report file.',
+        'help|h-s' => 'Prints this usage information.',
     ];
-
 
     public function execute(ConsoleWrapperInterface $console)
     {
