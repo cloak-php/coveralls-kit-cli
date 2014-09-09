@@ -6,6 +6,7 @@ use coverallskit\CommandFactoryInterface;
 use coverallskit\ConsoleWrapperInterface;
 use coverallskit\ContextInterface;
 use coverallskit\CommandInterface;
+use coverallskit\FailureException;
 use coverallskit\HelpException;
 use coverallskit\Application;
 use Prophecy\Prophet;
@@ -75,8 +76,37 @@ describe('Application', function() {
             });
         });
 
+        context('when execution of the command fails', function() {
+            before(function () {
+                $this->prophet = new Prophet();
 
+                $this->failureException = new FailureException('failure');
+                $this->failureMessage = sprintf("Failure:\n    %s", $this->failureException->getMessage());
 
+                $this->consoleWrapper = $this->prophet->prophesize(ConsoleWrapperInterface::class);
+                $this->consoleWrapper->writeMessage()->shouldNotBeCalled();
+                $this->consoleWrapper->writeFailureMessage(Argument::exact($this->failureMessage))->shouldBeCalled();
+                $this->consoleWrapper->writeSuccessMessage()->shouldNotBeCalled();
+
+                $this->command = $this->prophet->prophesize(CommandInterface::class);
+                $this->command->execute($this->consoleWrapper->reveal())
+                    ->willThrow($this->failureException);
+
+                $this->commandFactory = $this->prophet->prophesize(CommandFactoryInterface::class);
+                $this->commandFactory->createFromContext(Argument::type(ContextInterface::class))
+                    ->willReturn($this->command->reveal());
+
+                $this->application = new Application(
+                    $this->commandFactory->reveal(),
+                    $this->consoleWrapper->reveal()
+                );
+
+                $this->application->run(['coverallskit', 'build']);
+            });
+            it('display failure message', function() {
+                $this->prophet->checkPredictions();
+            });
+        });
 
     });
 });
