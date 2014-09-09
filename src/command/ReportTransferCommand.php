@@ -35,7 +35,6 @@ class ReportTransferCommand extends AbstractCommand
 
     /**
      * @param ConsoleWrapperInterface $console
-     * @return mixed
      */
     protected function perform(ConsoleWrapperInterface $console)
     {

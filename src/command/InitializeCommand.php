@@ -13,8 +13,6 @@ namespace coverallskit\command;
 
 use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
-use coverallskit\HelpException;
-use coverallskit\RequireException;
 use coverallskit\FailureException;
 
 
@@ -34,10 +32,19 @@ class InitializeCommand extends AbstractCommand
 
     /**
      * @param ConsoleWrapperInterface $console
-     * @return mixed
      */
     protected function perform(ConsoleWrapperInterface $console)
     {
+        $currentWorkDirectory = getcwd();
+
+        $templateFile = realpath(__DIR__ . '/../../template/.coveralls.yml');
+        $destFile = $currentWorkDirectory . DIRECTORY_SEPARATOR . '.coveralls.yml';
+
+        if (copy($templateFile, $destFile)) {
+            return;
+        }
+
+        throw new FailureException("Can not copy the files to the directory $currentWorkDirectory.");
     }
 
 }

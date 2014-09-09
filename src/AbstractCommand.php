@@ -78,7 +78,6 @@ abstract class AbstractCommand implements CommandInterface
 
     /**
      * @param ConsoleWrapperInterface $console
-     * @return mixed
      */
     abstract protected function perform(ConsoleWrapperInterface $console);
 
