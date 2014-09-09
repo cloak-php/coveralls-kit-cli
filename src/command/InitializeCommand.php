@@ -37,14 +37,7 @@ class InitializeCommand extends AbstractCommand
      */
     protected function perform(ConsoleWrapperInterface $console)
     {
-        $currentWorkDirectory = getcwd();
-        $destDirectory = $currentWorkDirectory;
-
-        if ($this->options->getOption('project-directory')) {
-            $projectDirectory = $this->options->getOption('project-directory');
-            $projectDirectory = preg_replace('/^\/(.+)/', '$1', $projectDirectory);
-            $destDirectory .= DIRECTORY_SEPARATOR . $projectDirectory . DIRECTORY_SEPARATOR;
-        }
+        $destDirectory = $this->getDestDirectory();
 
         $templateFile = realpath(__DIR__ . '/../../template/.coveralls.yml');
         $destFile = $destDirectory . '.coveralls.yml';
@@ -58,6 +51,26 @@ class InitializeCommand extends AbstractCommand
         }
 
         throw new FailureException("Can not copy the files to the directory $destDirectory.");
+    }
+
+    /**
+     * @return string
+     */
+    private function getDestDirectory()
+    {
+        $currentWorkDirectory = getcwd();
+        $destDirectory = $currentWorkDirectory;
+
+        $projectDirectory = $this->options->getOption('project-directory');
+
+        if (is_null($projectDirectory)) {
+            return $destDirectory;
+        }
+
+        $projectDirectory = preg_replace('/^\/(.+)/', '$1', $projectDirectory);
+        $destDirectory .= DIRECTORY_SEPARATOR . $projectDirectory . DIRECTORY_SEPARATOR;
+
+        return $destDirectory;
     }
 
 }
