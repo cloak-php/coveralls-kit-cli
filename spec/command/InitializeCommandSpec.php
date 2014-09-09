@@ -63,6 +63,36 @@ describe('InitializeCommand', function() {
                 $this->prophet->checkPredictions();
             });
         });
+
+        context('use --project-directory or -p option', function() {
+            before(function () {
+                $this->destFile = __DIR__ . '/../tmp/.coveralls.yml';
+
+                $this->prophet = new Prophet();
+
+                $this->context = $this->prophet->prophesize(ContextInterface::class);
+                $this->context->getScriptName()->shouldNotBeCalled();
+                $this->context->getCommandName()->shouldNotBeCalled();
+                $this->context->getCommandArguments()->shouldNotBeCalled();
+                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
+                    $options = new Getopt($args[0], ['-p', 'spec/tmp']);
+                    $options->parse();
+                    return $options;
+                });
+
+                $this->command = new InitializeCommand($this->context->reveal());
+                $this->command->execute(new ConsoleWrapper());
+            });
+            after(function () {
+                unlink($this->destFile);
+            });
+            it('check mock object expectations', function() {
+                $this->prophet->checkPredictions();
+            });
+            it('copy template file', function() {
+                expect(file_exists($this->destFile))->toBeTrue();
+            });
+        });
     });
 
 });

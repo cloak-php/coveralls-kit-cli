@@ -27,8 +27,10 @@ class InitializeCommand extends AbstractCommand
      * @var array
      */
     protected $rules = [
+        'project-directory|p-s' => 'Initializes the directory.',
         'help|h-s' => 'Prints this usage information.',
     ];
+
 
     /**
      * @param ConsoleWrapperInterface $console
@@ -36,15 +38,22 @@ class InitializeCommand extends AbstractCommand
     protected function perform(ConsoleWrapperInterface $console)
     {
         $currentWorkDirectory = getcwd();
+        $destDirectory = $currentWorkDirectory;
+
+        if ($this->options->getOption('project-directory')) {
+            $projectDirectory = $this->options->getOption('project-directory');
+            $projectDirectory = preg_replace('/^\/(.+)/', '$1', $projectDirectory);
+            $destDirectory .= DIRECTORY_SEPARATOR . $projectDirectory . DIRECTORY_SEPARATOR;
+        }
 
         $templateFile = realpath(__DIR__ . '/../../template/.coveralls.yml');
-        $destFile = $currentWorkDirectory . DIRECTORY_SEPARATOR . '.coveralls.yml';
+        $destFile = $destDirectory . '.coveralls.yml';
 
         if (copy($templateFile, $destFile)) {
             return;
         }
 
-        throw new FailureException("Can not copy the files to the directory $currentWorkDirectory.");
+        throw new FailureException("Can not copy the files to the directory $destDirectory.");
     }
 
 }
