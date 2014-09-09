@@ -55,7 +55,7 @@ class Application
 
         try {
             $command->execute($this->console);
-            $this->success();
+            $this->success($context);
         } catch (HelpException $exception) {
             $this->help($exception);
             return;
@@ -71,9 +71,12 @@ class Application
         $this->console->writeFailureMessage($message);
     }
 
-    protected function success()
+    protected function success(ContextInterface $context)
     {
-        $this->console->writeSuccessMessage('was successful.');
+        $message = sprintf("Execution of '%s' command was successful.",
+            $context->getCommandName());
+
+        $this->console->writeSuccessMessage($message);
     }
 
     protected function help(HelpException $exception)
