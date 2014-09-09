@@ -11,9 +11,6 @@
 
 namespace coverallskit;
 
-use Zend\Console\Adapter\AdapterInterface;
-use Zend\Console\ColorInterface as Color;
-
 
 /**
  * Class Application
@@ -65,12 +62,18 @@ class Application
         }
     }
 
+    /**
+     * @param FailureException $exception
+     */
     protected function failure(FailureException $exception)
     {
         $message = sprintf("Failure:\n    %s", $exception->getMessage());
         $this->console->writeFailureMessage($message);
     }
 
+    /**
+     * @param ContextInterface $context
+     */
     protected function success(ContextInterface $context)
     {
         $message = sprintf("Execution of '%s' command was successful.",
@@ -79,6 +82,9 @@ class Application
         $this->console->writeSuccessMessage($message);
     }
 
+    /**
+     * @param HelpException $exception
+     */
     protected function help(HelpException $exception)
     {
         $this->console->writeMessage($exception->getMessage());
