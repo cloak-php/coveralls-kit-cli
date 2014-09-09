@@ -13,7 +13,6 @@ namespace coverallskit\command;
 
 use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
-use coverallskit\HelpException;
 use coverallskit\RequireException;
 use coverallskit\FailureException;
 
@@ -34,12 +33,12 @@ class ReportTransferCommand extends AbstractCommand
         'help|h-s' => 'Prints this usage information.',
     ];
 
-    public function execute(ConsoleWrapperInterface $console)
+    /**
+     * @param ConsoleWrapperInterface $console
+     * @return mixed
+     */
+    protected function perform(ConsoleWrapperInterface $console)
     {
-        if ($this->options->help) {
-            throw new HelpException($this->getUsageMessage());
-        };
-
         if (empty($this->options->config)) {
             throw new RequireException('config option is required.');
         }

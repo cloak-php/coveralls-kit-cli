@@ -42,6 +42,23 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
+     * @return string
+     */
+    public function getUsageMessage()
+    {
+        return $this->options->getUsageMessage();
+    }
+
+    /**
+     * @param ConsoleWrapperInterface $console
+     */
+    public function execute(ConsoleWrapperInterface $console)
+    {
+        $this->prepare();
+        $this->perform($console);
+    }
+
+    /**
      * @return array
      */
     protected function getRules()
@@ -50,11 +67,19 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * @return string
+     * @throws HelpException
      */
-    public function getUsageMessage()
+    protected function prepare()
     {
-        return $this->options->getUsageMessage();
+        if ($this->options->help) {
+            throw new HelpException($this->getUsageMessage());
+        }
     }
+
+    /**
+     * @param ConsoleWrapperInterface $console
+     * @return mixed
+     */
+    abstract protected function perform(ConsoleWrapperInterface $console);
 
 }

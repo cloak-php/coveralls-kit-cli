@@ -32,13 +32,12 @@ class InitializeCommand extends AbstractCommand
         'help|h-s' => 'Prints this usage information.',
     ];
 
-    public function execute(ConsoleWrapperInterface $console)
+    /**
+     * @param ConsoleWrapperInterface $console
+     * @return mixed
+     */
+    protected function perform(ConsoleWrapperInterface $console)
     {
-
-        if ($this->options->help) {
-            throw new HelpException($this->getUsageMessage());
-        };
-
     }
 
 }
