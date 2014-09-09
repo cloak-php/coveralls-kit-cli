@@ -23,17 +23,17 @@ abstract class AbstractCommand implements CommandInterface
     protected $rules = [];
 
     /**
-     * @var Context
+     * @var ContextInterface
      */
     protected $context;
 
     /**
-     * @var Getopt
+     * @var \Zend\Console\Getopt
      */
     protected $options;
 
     /**
-     * @param Context $context
+     * @param ContextInterface $context
      */
     public function __construct(ContextInterface $context)
     {
