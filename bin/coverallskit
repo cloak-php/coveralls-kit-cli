@@ -24,3 +24,24 @@ if (!$composerInstall) {
 }
 
 unset($composerInstall, $files, $file);
+
+
+use coverallskit\Application;
+use coverallskit\ConsoleWrapper;
+use coverallskit\CommandFactory;
+use coverallskit\command\ReportTransferCommand;
+use \Exception;
+
+$application = new Application(
+    new CommandFactory([
+        'transfer' => ReportTransferCommand::class
+    ]),
+    new ConsoleWrapper
+);
+
+try {
+    $application->run($argv, $_ENV);
+} catch (Exception $exception) {
+    exit(1);
+}
+exit(0);
