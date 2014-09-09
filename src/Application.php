@@ -32,11 +32,11 @@ class Application
      */
     private $commandFactory;
 
-
     /**
-     * @param CommandFactory $factory
+     * @param CommandFactoryInterface $commandFactory
+     * @param ConsoleWrapperInterface $console
      */
-    public function __construct(CommandFactory $commandFactory, ConsoleWrapperInterface $console)
+    public function __construct(CommandFactoryInterface $commandFactory, ConsoleWrapperInterface $console)
     {
         $this->commandFactory = $commandFactory;
         $this->console = $console;
