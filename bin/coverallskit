@@ -29,11 +29,14 @@ unset($composerInstall, $files, $file);
 use coverallskit\Application;
 use coverallskit\ConsoleWrapper;
 use coverallskit\CommandFactory;
+use coverallskit\command\InitializeCommand;
 use coverallskit\command\ReportTransferCommand;
 use \Exception;
 
+
 $application = new Application(
     new CommandFactory([
+        'init' => InitializeCommand::class,
         'transfer' => ReportTransferCommand::class
     ]),
     new ConsoleWrapper
