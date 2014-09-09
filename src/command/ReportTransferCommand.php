@@ -44,7 +44,7 @@ class ReportTransferCommand extends AbstractCommand
             throw new RequireException('config option is required.');
         }
 
-        $configrationPath = getcwd() . $this->options->config;
+        $configrationPath = getcwd() . DIRECTORY_SEPARATOR . $this->options->config;
 
         if (file_exists($configrationPath) === false) {
             throw new FailureException("File $configrationPath is not found");
