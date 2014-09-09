@@ -49,6 +49,10 @@ class InitializeCommand extends AbstractCommand
         $templateFile = realpath(__DIR__ . '/../../template/.coveralls.yml');
         $destFile = $destDirectory . '.coveralls.yml';
 
+        if (file_exists($destDirectory) === false) {
+            throw new FailureException("$destDirectory does not exist.");
+        }
+
         if (copy($templateFile, $destFile)) {
             return;
         }
