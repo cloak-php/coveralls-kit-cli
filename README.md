@@ -3,8 +3,8 @@ coveralls-kit-cli
 
 [![Build Status](https://travis-ci.org/cloak-php/coveralls-kit-cli.svg?branch=master)](https://travis-ci.org/cloak-php/coveralls-kit-cli)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cloak-php/coveralls-kit-cli/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cloak-php/coveralls-kit-cli/?branch=master)
+[![Dependency Status](https://www.versioneye.com/user/projects/540f97fb9e1622709c000021/badge.svg?style=flat)](https://www.versioneye.com/user/projects/540f97fb9e1622709c000021)
 [![Stories in Ready](https://badge.waffle.io/cloak-php/coveralls-kit-cli.png?label=ready&title=Ready)](https://waffle.io/cloak-php/coveralls-kit-cli)
-
 
 ## Requirements
 
@@ -13,7 +13,7 @@ coveralls-kit-cli
 
 ## Install
 
-Please add the following to composer.json.
+Please add the following to composer.json.  
 Then please run the composer install.
 
     "cloak-php/coverallskit-cli": "1.0.0"
@@ -45,4 +45,4 @@ write to the configuration file specified in the report.
 
 ## Run only unit test
 
-    vendor/bin/pho
+	vendor/bin/pho --stop

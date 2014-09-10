@@ -25,7 +25,7 @@ class Application
     private $console;
 
     /**
-     * @var CommandFactory
+     * @var CommandFactoryInterface
      */
     private $commandFactory;
 
@@ -35,8 +35,8 @@ class Application
      */
     public function __construct(CommandFactoryInterface $commandFactory, ConsoleWrapperInterface $console)
     {
-        $this->commandFactory = $commandFactory;
         $this->console = $console;
+        $this->commandFactory = $commandFactory;
     }
 
     /**
