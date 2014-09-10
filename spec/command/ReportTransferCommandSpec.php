@@ -63,11 +63,33 @@ describe('ReportTransferCommand', function() {
             $this->command->setReportTransfer($this->reportTransfer->reveal());
             $this->command->execute(new ConsoleWrapper());
         });
-        it('transfer report', function() {
+        it('transfer report file', function() {
             $this->prophet->checkPredictions();
         });
 
-        context('use --help or -h option', function() {
+        context('when use debug option', function() {
+            before(function () {
+                $this->prophet = new Prophet();
+
+                $this->context = $this->prophet->prophesize(ContextInterface::class);
+                $this->context->getScriptName()->shouldNotBeCalled();
+                $this->context->getCommandName()->shouldNotBeCalled();
+                $this->context->getCommandArguments()->shouldNotBeCalled();
+                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
+                    $options = new Getopt($args[0], ['-c', '.coveralls.yml', '-d']);
+                    $options->parse();
+                    return $options;
+                });
+
+                $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->command->execute(new ConsoleWrapper());
+            });
+            it('only generate report file', function() {
+                $this->prophet->checkPredictions();
+            });
+        });
+
+        context('when use --help or -h option', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
@@ -93,7 +115,7 @@ describe('ReportTransferCommand', function() {
             });
         });
 
-        context('unuse --config or -c option', function() {
+        context('when unuse --config or -c option', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
@@ -119,7 +141,7 @@ describe('ReportTransferCommand', function() {
             });
         });
 
-        context('configration file not exists', function() {
+        context('when configration file not exists', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
