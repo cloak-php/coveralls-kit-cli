@@ -15,6 +15,8 @@ use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
 use coverallskit\RequireException;
 use coverallskit\FailureException;
+use coverallskit\Configuration;
+use coverallskit\ReportBuilder;
 
 
 /**
@@ -47,6 +49,10 @@ class ReportTransferCommand extends AbstractCommand
         if (file_exists($configrationPath) === false) {
             throw new FailureException("File $configrationPath is not found");
         }
+
+        $configuration = Configuration::loadFromFile($configrationPath);
+        $reportBuilder = ReportBuilder::fromConfiguration($configuration);
+        $reportBuilder->build()->save();
 
     }
 
