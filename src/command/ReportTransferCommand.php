@@ -57,10 +57,7 @@ class ReportTransferCommand extends AbstractCommand
      */
     public function getReportTransfer()
     {
-        if ($this->reportTransfer === null) {
-            $this->reportTransfer = new ReportUpLoader();
-        }
-
+        $this->reportTransfer = $this->reportTransfer ?: new ReportUpLoader();
         return $this->reportTransfer;
     }
 
