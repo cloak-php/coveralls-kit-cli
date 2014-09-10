@@ -13,7 +13,7 @@ coveralls-kit-cli
 
 ## Install
 
-Please add the following to composer.json.
+Please add the following to composer.json.  
 Then please run the composer install.
 
     "cloak-php/coverallskit-cli": "1.0.0"
@@ -45,4 +45,4 @@ write to the configuration file specified in the report.
 
 ## Run only unit test
 
-    vendor/bin/pho
+	vendor/bin/pho --stop
