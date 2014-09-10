@@ -49,7 +49,7 @@ describe('ReportTransferCommand', function() {
             $this->context->getCommandName()->shouldNotBeCalled();
             $this->context->getCommandArguments()->shouldNotBeCalled();
             $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                $options = new Getopt($args[0], ['-c', './coveralls.yml']);
+                $options = new Getopt($args[0], ['-c', '.coveralls.yml']);
                 $options->parse();
                 return $options;
             });
@@ -57,7 +57,7 @@ describe('ReportTransferCommand', function() {
             $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
             $this->reportTransfer->setClient()->shouldNotBeCalled();
             $this->reportTransfer->getClient()->shouldNotBeCalled();
-            $this->reportTransfer->upload(Argument::type(ReportInterface::class));
+            $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
 
             $this->command = new ReportTransferCommand($this->context->reveal());
             $this->command->setReportTransfer($this->reportTransfer->reveal());
