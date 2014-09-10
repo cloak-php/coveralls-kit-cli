@@ -81,7 +81,13 @@ describe('ReportTransferCommand', function() {
                     return $options;
                 });
 
+                $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+                $this->reportTransfer->setClient()->shouldNotBeCalled();
+                $this->reportTransfer->getClient()->shouldNotBeCalled();
+                $this->reportTransfer->upload()->shouldNotBeCalled();
+
                 $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->command->setReportTransfer($this->reportTransfer->reveal());
                 $this->command->execute(new ConsoleWrapper());
             });
             it('only generate report file', function() {
