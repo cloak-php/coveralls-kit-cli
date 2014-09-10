@@ -13,6 +13,8 @@ namespace coverallskit\command;
 
 use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
+use coverallskit\ReportUpLoaderInterface;
+use coverallskit\ReportUpLoader;
 use coverallskit\RequireException;
 use coverallskit\FailureException;
 use coverallskit\Configuration;
@@ -27,6 +29,11 @@ class ReportTransferCommand extends AbstractCommand
 {
 
     /**
+     * @var \coverallskit\ReportUpLoaderInterface
+     */
+    private $reportTransfer;
+
+    /**
      * @var array
      */
     protected $rules = [
@@ -34,6 +41,28 @@ class ReportTransferCommand extends AbstractCommand
         'debug|d-s' => 'Only generate a report file.',
         'help|h-s' => 'Prints this usage information.',
     ];
+
+    /**
+     * @param ReportUpLoaderInterface $uploader
+     * @return $this
+     */
+    public function setReportTransfer(ReportUpLoaderInterface $uploader)
+    {
+        $this->reportTransfer = $uploader;
+        return $this;
+    }
+
+    /**
+     * @return ReportUpLoader|ReportUpLoaderInterface
+     */
+    public function getReportTransfer()
+    {
+        if ($this->reportTransfer === null) {
+            $this->reportTransfer = new ReportUpLoader();
+        }
+
+        return $this->reportTransfer;
+    }
 
     /**
      * @param ConsoleWrapperInterface $console
@@ -60,6 +89,7 @@ class ReportTransferCommand extends AbstractCommand
             return;
         }
 
+        $report->setUploader($this->getReportTransfer());
         $report->upload();
     }
 
