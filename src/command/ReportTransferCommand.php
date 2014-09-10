@@ -52,8 +52,15 @@ class ReportTransferCommand extends AbstractCommand
 
         $configuration = Configuration::loadFromFile($configrationPath);
         $reportBuilder = ReportBuilder::fromConfiguration($configuration);
-        $reportBuilder->build()->save();
 
+        $report = $reportBuilder->build();
+        $report->save();
+
+        if ($this->options->getOption('debug')) {
+            return;
+        }
+
+        $report->upload();
     }
 
 }
