@@ -11,9 +11,6 @@
 
 namespace coverallskit;
 
-use Zend\Console\Adapter\AdapterInterface;
-use Zend\Console\ColorInterface as Color;
-
 
 /**
  * Class Application
@@ -32,11 +29,11 @@ class Application
      */
     private $commandFactory;
 
-
     /**
-     * @param CommandFactory $factory
+     * @param CommandFactoryInterface $commandFactory
+     * @param ConsoleWrapperInterface $console
      */
-    public function __construct(CommandFactory $commandFactory, ConsoleWrapperInterface $console)
+    public function __construct(CommandFactoryInterface $commandFactory, ConsoleWrapperInterface $console)
     {
         $this->commandFactory = $commandFactory;
         $this->console = $console;
@@ -55,7 +52,7 @@ class Application
 
         try {
             $command->execute($this->console);
-            $this->success();
+            $this->success($context);
         } catch (HelpException $exception) {
             $this->help($exception);
             return;
@@ -65,17 +62,29 @@ class Application
         }
     }
 
+    /**
+     * @param FailureException $exception
+     */
     protected function failure(FailureException $exception)
     {
         $message = sprintf("Failure:\n    %s", $exception->getMessage());
         $this->console->writeFailureMessage($message);
     }
 
-    protected function success()
+    /**
+     * @param ContextInterface $context
+     */
+    protected function success(ContextInterface $context)
     {
-        $this->console->writeSuccessMessage('was successful.');
+        $message = sprintf("Execution of '%s' command was successful.",
+            $context->getCommandName());
+
+        $this->console->writeSuccessMessage($message);
     }
 
+    /**
+     * @param HelpException $exception
+     */
     protected function help(HelpException $exception)
     {
         $this->console->writeMessage($exception->getMessage());

@@ -23,22 +23,39 @@ abstract class AbstractCommand implements CommandInterface
     protected $rules = [];
 
     /**
-     * @var Context
+     * @var ContextInterface
      */
     protected $context;
 
     /**
-     * @var Getopt
+     * @var \Zend\Console\Getopt
      */
     protected $options;
 
     /**
-     * @param Context $context
+     * @param ContextInterface $context
      */
     public function __construct(ContextInterface $context)
     {
         $this->context = $context;
         $this->options = $context->getCommandOptions($this->getRules());
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsageMessage()
+    {
+        return $this->options->getUsageMessage();
+    }
+
+    /**
+     * @param ConsoleWrapperInterface $console
+     */
+    public function execute(ConsoleWrapperInterface $console)
+    {
+        $this->prepare();
+        $this->perform($console);
     }
 
     /**
@@ -50,11 +67,18 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * @return string
+     * @throws HelpException
      */
-    public function getUsageMessage()
+    protected function prepare()
     {
-        return $this->options->getUsageMessage();
+        if ($this->options->help) {
+            throw new HelpException($this->getUsageMessage());
+        }
     }
+
+    /**
+     * @param ConsoleWrapperInterface $console
+     */
+    abstract protected function perform(ConsoleWrapperInterface $console);
 
 }
