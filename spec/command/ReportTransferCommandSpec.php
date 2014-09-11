@@ -3,6 +3,8 @@
 namespace coverallskit\spec\command;
 
 use coverallskit\command\ReportTransferCommand;
+use coverallskit\ReportUpLoaderInterface;
+use coverallskit\entity\ReportInterface;
 use coverallskit\ContextInterface;
 use coverallskit\HelpException;
 use coverallskit\RequireException;
@@ -39,7 +41,61 @@ describe('ReportTransferCommand', function() {
     });
 
     describe('execute', function() {
-        context('use --help or -h option', function() {
+        before(function () {
+            $this->prophet = new Prophet();
+
+            $this->context = $this->prophet->prophesize(ContextInterface::class);
+            $this->context->getScriptName()->shouldNotBeCalled();
+            $this->context->getCommandName()->shouldNotBeCalled();
+            $this->context->getCommandArguments()->shouldNotBeCalled();
+            $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
+                $options = new Getopt($args[0], ['-c', '.coveralls.yml']);
+                $options->parse();
+                return $options;
+            });
+
+            $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+            $this->reportTransfer->setClient()->shouldNotBeCalled();
+            $this->reportTransfer->getClient()->shouldNotBeCalled();
+            $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
+
+            $this->command = new ReportTransferCommand($this->context->reveal());
+            $this->command->setReportTransfer($this->reportTransfer->reveal());
+            $this->command->execute(new ConsoleWrapper());
+        });
+        it('transfer report file', function() {
+            $this->prophet->checkPredictions();
+        });
+
+        context('when use debug option', function() {
+            before(function () {
+                $this->prophet = new Prophet();
+
+                $this->context = $this->prophet->prophesize(ContextInterface::class);
+                $this->context->getScriptName()->shouldNotBeCalled();
+                $this->context->getCommandName()->shouldNotBeCalled();
+                $this->context->getCommandArguments()->shouldNotBeCalled();
+                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
+                    $options = new Getopt($args[0], ['-c', '.coveralls.yml', '-d']);
+                    $options->parse();
+                    return $options;
+                });
+
+                $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+                $this->reportTransfer->setClient()->shouldNotBeCalled();
+                $this->reportTransfer->getClient()->shouldNotBeCalled();
+                $this->reportTransfer->upload()->shouldNotBeCalled();
+
+                $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->command->setReportTransfer($this->reportTransfer->reveal());
+                $this->command->execute(new ConsoleWrapper());
+            });
+            it('only generate report file', function() {
+                $this->prophet->checkPredictions();
+            });
+        });
+
+        context('when use --help or -h option', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
@@ -65,7 +121,7 @@ describe('ReportTransferCommand', function() {
             });
         });
 
-        context('unuse --config or -c option', function() {
+        context('when unuse --config or -c option', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
@@ -91,7 +147,7 @@ describe('ReportTransferCommand', function() {
             });
         });
 
-        context('configration file not exists', function() {
+        context('when configration file not exists', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
@@ -116,7 +172,6 @@ describe('ReportTransferCommand', function() {
                 $this->prophet->checkPredictions();
             });
         });
-
     });
 
 });

@@ -6,5 +6,6 @@ before_install:
   - composer self-update
   - composer install
 script:
-  - vendor/bin/pho --stop
-
+  - php script/coverage.php
+after_script:
+  - php bin/coverallskit transfer -c .coveralls.yml
