@@ -3,7 +3,7 @@
 namespace coverallskit\spec\command;
 
 use coverallskit\command\ReportTransferCommand;
-use coverallskit\ReportUpLoaderInterface;
+use coverallskit\ReportTransferInterface;
 use coverallskit\entity\ReportInterface;
 use coverallskit\ContextInterface;
 use coverallskit\HelpException;
@@ -54,7 +54,7 @@ describe('ReportTransferCommand', function() {
                 return $options;
             });
 
-            $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+            $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
             $this->reportTransfer->setClient()->shouldNotBeCalled();
             $this->reportTransfer->getClient()->shouldNotBeCalled();
             $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
@@ -63,6 +63,7 @@ describe('ReportTransferCommand', function() {
             $this->command->setReportTransfer($this->reportTransfer->reveal());
             $this->command->execute(new ConsoleWrapper());
         });
+
         it('transfer report file', function() {
             $this->prophet->checkPredictions();
         });
@@ -81,7 +82,7 @@ describe('ReportTransferCommand', function() {
                     return $options;
                 });
 
-                $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+                $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
                 $this->reportTransfer->setClient()->shouldNotBeCalled();
                 $this->reportTransfer->getClient()->shouldNotBeCalled();
                 $this->reportTransfer->upload()->shouldNotBeCalled();
