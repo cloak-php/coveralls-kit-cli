@@ -17,7 +17,7 @@ coveralls-kit-cli
 Please add the following to composer.json.  
 Then please run the composer install.
 
-    "cloak-php/coverallskit-cli": "1.0.0"
+    "cloak/coverallskit-cli": "1.0.0"
 
 ## Basic usage
 
