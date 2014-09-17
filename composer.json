@@ -1,10 +1,10 @@
 {
     "name": "cloak/coverallskit-cli",
     "type": "library",
-    "description": "",
+    "description": "Command line interface for coverallskit",
     "version": "1.0.0",
     "keywords": [
-        "coveralls", "code coverage", "report"
+        "cli", "command line", "coveralls", "code coverage", "report"
     ],
     "bin": [ "bin/coverallskit" ],
     "require": {
