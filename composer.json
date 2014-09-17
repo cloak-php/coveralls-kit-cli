@@ -17,7 +17,8 @@
         "danielstjules/pho": "dev-master",
         "jaz303/phake": "0.6.*",
         "phpspec/prophecy": "1.2.*",
-        "phpunit/php-code-coverage": "3.0.*@dev"
+        "phpunit/php-code-coverage": "3.0.*@dev",
+        "cloak/lcov-reporter": "1.1.*"
     },
     "license": "MIT",
     "authors": [
