@@ -31,8 +31,7 @@ use coverallskit\ConsoleWrapper;
 use coverallskit\CommandFactory;
 use coverallskit\command\InitializeCommand;
 use coverallskit\command\ReportTransferCommand;
-use Exception;
-
+use \Exception as CLIException;
 
 $application = new Application(
     new CommandFactory([
@@ -44,7 +43,7 @@ $application = new Application(
 
 try {
     $application->run($argv, $_ENV);
-} catch (Exception $exception) {
+} catch (CLIException $exception) {
     echo $exception->getMessage();
     exit(1);
 }
