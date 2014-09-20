@@ -23,6 +23,11 @@ abstract class AbstractCommand implements CommandInterface
     protected $rules = [];
 
     /**
+     * @var string
+     */
+    protected $summaryMessage;
+
+    /**
      * @var ContextInterface
      */
     protected $context;
@@ -32,6 +37,7 @@ abstract class AbstractCommand implements CommandInterface
      */
     protected $options;
 
+
     /**
      * @param ContextInterface $context
      */
@@ -39,6 +45,14 @@ abstract class AbstractCommand implements CommandInterface
     {
         $this->context = $context;
         $this->options = $context->getCommandOptions($this->getRules());
+    }
+
+    /**
+     * @return string
+     */
+    public function getSummaryMessage()
+    {
+        return $this->summaryMessage;
     }
 
     /**

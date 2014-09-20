@@ -31,6 +31,11 @@ class ReportTransferCommand extends AbstractCommand implements ReportTransferAwa
     use ReportTransferAwareTrait;
 
     /**
+     * @var string
+     */
+    protected $summaryMessage = 'Send to coveralls the report file.';
+
+    /**
      * @var array
      */
     protected $rules = [

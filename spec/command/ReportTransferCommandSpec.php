@@ -16,6 +16,31 @@ use Zend\Console\Getopt;
 
 
 describe('ReportTransferCommand', function() {
+
+    describe('getSummaryMessage', function() {
+        before(function () {
+            $this->prophet = new Prophet();
+
+            $this->context = $this->prophet->prophesize(ContextInterface::class);
+            $this->context->getScriptName()->shouldNotBeCalled();
+            $this->context->getCommandName()->shouldNotBeCalled();
+            $this->context->getCommandArguments()->shouldNotBeCalled();
+            $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
+                $options = new Getopt($args[0], []);
+                $options->parse();
+                return $options;
+            });
+
+            $this->command = new ReportTransferCommand($this->context->reveal());
+        });
+        it('return summary message', function() {
+            expect($this->command->getSummaryMessage())->toEqual('Send to coveralls the report file.');
+        });
+        it('check mock object expectations', function() {
+            $this->prophet->checkPredictions();
+        });
+    });
+
     describe('getUsageMessage', function() {
         before(function () {
             $this->prophet = new Prophet();

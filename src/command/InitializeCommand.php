@@ -24,6 +24,11 @@ class InitializeCommand extends AbstractCommand
 {
 
     /**
+     * @var string
+     */
+    protected $summaryMessage = 'Create a coveralls.yml file.';
+
+    /**
      * @var array
      */
     protected $rules = [
