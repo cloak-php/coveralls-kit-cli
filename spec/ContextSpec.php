@@ -4,7 +4,8 @@ namespace coverallskit\spec;
 
 use coverallskit\Context;
 use Zend\Stdlib\Parameters;
-use Zend\Console\Getopt;
+use Ulrichsg\Getopt\Getopt;
+use Ulrichsg\Getopt\Option;
 
 describe('Context', function() {
     before(function () {
@@ -31,11 +32,13 @@ describe('Context', function() {
     });
     describe('getCommandOptions', function() {
         before(function () {
-            $this->options = $this->context->getCommandOptions([
-                'config|c=s' => 'help message'
-            ]);
+
         });
         it('return command options', function() {
+            $this->options = $this->context->getCommandOptions(new Getopt([
+                new Option('c', 'config', Getopt::OPTIONAL_ARGUMENT)
+            ]));
+
             expect($this->options)->toBeAnInstanceOf(Getopt::class);
         });
     });

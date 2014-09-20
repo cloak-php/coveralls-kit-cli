@@ -12,7 +12,7 @@
 namespace coverallskit;
 
 use Zend\Stdlib\Parameters;
-use Zend\Console\Getopt;
+use Ulrichsg\Getopt\Getopt;
 
 /**
  * Class Context
@@ -83,17 +83,17 @@ class Context implements ContextInterface
     }
 
     /**
-     * @param array $rules
-     * @return Getopt
+     * @param Getopt $opts
+     * @return \Ulrichsg\Getopt\Getopt
      */
-    public function getCommandOptions(array $rules)
+    public function getCommandOptions(Getopt $opts)
     {
         $arguments = $this->getCommandArguments();
+        $argumentValue = implode(' ', $arguments->toArray());
 
-        $options = new Getopt($rules, $arguments->toArray());
-        $options->parse();
+        $opts->parse($argumentValue);
 
-        return $options;
+        return $opts;
     }
 
 }

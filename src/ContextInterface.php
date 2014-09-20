@@ -11,6 +11,8 @@
 
 namespace coverallskit;
 
+use Ulrichsg\Getopt\Getopt;
+
 /**
  * Interface ContextInterface
  * @package coverallskit
@@ -34,9 +36,9 @@ interface ContextInterface
     public function getCommandArguments();
 
     /**
-     * @param array $rules
-     * @return \Zend\Console\Getopt
+     * @param Getopt $opts
+     * @return \Ulrichsg\Getopt\Getopt
      */
-    public function getCommandOptions(array $rules);
+    public function getCommandOptions(Getopt $opts);
 
 }
