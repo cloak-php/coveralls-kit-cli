@@ -10,6 +10,7 @@
  */
 
 namespace coverallskit;
+use coverallskit\command\HelpCommand;
 
 
 /**
@@ -48,7 +49,11 @@ class Application
         $environment = $env ?: $_ENV;
         $context = new Context($argv, $environment);
 
-        $command = $this->commandFactory->createFromContext($context);
+        try {
+            $command = $this->commandFactory->createFromContext($context);
+        } catch (CommandNotFoundException $exception) {
+            $command = new HelpCommand($context);
+        }
 
         try {
             $command->execute($this->console);
