@@ -3,49 +3,28 @@
 namespace coverallskit\spec\command;
 
 use coverallskit\command\InitializeCommand;
-use coverallskit\Context;
-use coverallskit\HelpException;
-use coverallskit\ConsoleWrapper;
-use coverallskit\FailureException;
-
+//use coverallskit\Context;
+//use coverallskit\HelpException;
+//use coverallskit\ConsoleWrapper;/
+//use coverallskit\FailureException;
+use Aura\Cli\Stdio;
+use Aura\Cli\Context;
+use Aura\Cli\CliFactory;
+use Aura\Cli\Status;
 
 describe('InitializeCommand', function() {
-    describe('getSummaryMessage', function() {
+    describe('__invoke', function() {
         before(function () {
-            $this->context = new Context([]);
-            $this->command = new InitializeCommand($this->context);
+            $this->destFile = __DIR__ . '/../tmp/.coveralls.yml';
+
+            $this->factory = new CliFactory();
+            $this->stdio = $this->factory->newStdio();
+            $this->context = $this->factory->newContext();
+            $this->command = new InitializeCommand($this->context, $this->stdio);
         });
-        it('return summary message', function() {
-            expect($this->command->getSummaryMessage())->toEqual('Create a coveralls.yml file.');
-        });
-    });
-    describe('getUsageMessage', function() {
-        before(function () {
-            $this->context = new Context([]);
-            $this->command = new InitializeCommand($this->context);
-        });
-        it('return help message', function() {
-            expect($this->command->getUsageMessage())->toBeA('string');
-        });
-    });
-    describe('execute', function() {
-        context('use --help or -h option', function() {
+        context('when default', function() {
             before(function () {
-                $this->context = new Context(['bin/coverallskit', 'init', '--help']);
-                $this->command = new InitializeCommand($this->context);
-            });
-            it('throw HelpException', function() {
-                expect(function() {
-                    $this->command->execute(new ConsoleWrapper());
-                })->toThrow(HelpException::class);
-            });
-        });
-        context('use --project-directory or -p option', function() {
-            before(function () {
-                $this->destFile = __DIR__ . '/../tmp/.coveralls.yml';
-                $this->context = new Context(['bin/coverallskit', 'init', '-p', 'spec/tmp']);
-                $this->command = new InitializeCommand($this->context);
-                $this->command->execute(new ConsoleWrapper());
+                $this->status = $this->command('spec/tmp');
             });
             after(function () {
                 unlink($this->destFile);
@@ -53,17 +32,16 @@ describe('InitializeCommand', function() {
             it('copy template file', function() {
                 expect(file_exists($this->destFile))->toBeTrue();
             });
+            it('return Status::SUCCESS', function() {
+                expect($this->status)->toEqual(Status::SUCCESS);
+            });
         });
         context('when directory not found', function() {
             before(function () {
-                $this->destFile = __DIR__ . '/../tmp/.coveralls.yml';
-                $this->context = new Context(['bin/coverallskit', 'init', '-p', 'spec/tmp/tmp']);
-                $this->command = new InitializeCommand($this->context);
+                $this->status = $this->command('spec/tmp/tmp');
             });
-            it('throw FailureException', function() {
-                expect(function() {
-                    $this->command->execute(new ConsoleWrapper());
-                })->toThrow(FailureException::class);
+            it('return Status::FAILURE', function() {
+                expect($this->status)->toEqual(Status::FAILURE);
             });
         });
     });

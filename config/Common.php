@@ -2,8 +2,13 @@
 
 namespace Aura\Cli_Project\_Config;
 
+use coverallskit\command\InitializeCommand;
 use Aura\Di\Config;
 use Aura\Di\Container;
+use Aura\Cli\Help;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 
 /**
  * Class Common
@@ -20,7 +25,12 @@ class Common extends Config
      */
     public function define(Container $di)
     {
-        $di->set('aura/project-kernel:logger', $di->newInstance('Monolog\Logger'));
+        $di->set('aura/project-kernel:logger', $di->newInstance(Logger::class));
+
+        $di->params[InitializeCommand::class] = [
+            'context' => $di->lazyGet('aura/cli-kernel:context'),
+            'stdio' => $di->lazyGet('aura/cli-kernel:stdio')
+        ];
     }
 
     /**
@@ -44,13 +54,10 @@ class Common extends Config
         $mode = $project->getMode();
         $file = $project->getPath("tmp/log/{$mode}.log");
 
+        $streamHandler = $di->newInstance(StreamHandler::class, ['stream' => $file]);
+
         $logger = $di->get('aura/project-kernel:logger');
-        $logger->pushHandler($di->newInstance(
-            'Monolog\Handler\StreamHandler',
-            array(
-                'stream' => $file,
-            )
-        ));
+        $logger->pushHandler($streamHandler);
     }
 
     /**
@@ -64,13 +71,7 @@ class Common extends Config
         $logger = $di->get('aura/project-kernel:logger');
 
         $dispatcher = $di->get('aura/cli-kernel:dispatcher');
-        $dispatcher->setObject(
-            'hello',
-            function ($name = 'World') use ($context, $stdio, $logger) {
-                $stdio->outln("Hello {$name}!");
-                $logger->debug("Said hello to '{$name}'");
-            }
-        );
+        $dispatcher->setObject('init', $di->lazyNew(InitializeCommand::class));
     }
 
     /**
@@ -81,10 +82,12 @@ class Common extends Config
     {
         $helpService = $di->get('aura/cli-kernel:help_service');
 
-        $help = $di->newInstance('Aura\Cli\Help');
-        $helpService->set('hello', function () use ($help) {
-            $help->setUsage(array('', '<noun>'));
-            $help->setSummary("A demonstration 'hello world' command.");
+        $help = $di->newInstance(Help::class);
+
+        //
+        $helpService->set('init', function () use ($help) {
+            $help->setUsage(['', '<project-directory>']);
+            $help->setSummary('Create a coveralls.yml file.');
             return $help;
         });
     }

@@ -32,9 +32,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "coverallskit\\": "src/"
-        },
-        "psr-4": {
+            "coverallskit\\": "src/",
             "Aura\\Cli_Project\\_Config\\": "config/"
         }
     },

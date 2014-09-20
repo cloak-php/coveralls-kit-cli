@@ -11,70 +11,69 @@
 
 namespace coverallskit\command;
 
-use coverallskit\AbstractCommand;
-use coverallskit\ConsoleWrapperInterface;
-use coverallskit\FailureException;
-use Ulrichsg\Getopt\Getopt;
-use Ulrichsg\Getopt\Option;
-
+use Aura\Cli\Stdio;
+use Aura\Cli\Context;
+use Aura\Cli\Status;
 
 /**
  * Class InitializeCommand
  * @package coverallskit\command
  */
-class InitializeCommand extends AbstractCommand
+class InitializeCommand
 {
 
     /**
-     * @var string
+     * @var Context
      */
-    protected $summaryMessage = 'Create a coveralls.yml file.';
+    private $context;
 
     /**
-     * @return \Ulrichsg\Getopt\Getopt;
+     * @var Stdio
      */
-    protected function getOptions()
+    private $stdio;
+
+    /**
+     * @param Context $context
+     * @param Stdio $stdio
+     */
+    public function __construct(Context $context, Stdio $stdio)
     {
-        $projectDirectory = new Option('p', 'project-directory', Getopt::OPTIONAL_ARGUMENT);
-        $projectDirectory->setDescription('Initializes the directory.');
-
-        $help = new Option('h', 'help', Getopt::OPTIONAL_ARGUMENT);
-        $help->setDescription('Prints this usage information.');
-
-        $options = new Getopt([$projectDirectory, $help]);
-        return $options;
+        $this->context = $context;
+        $this->stdio = $stdio;
     }
 
     /**
-     * @param ConsoleWrapperInterface $console
+     * @param string|null $projectDirectory
+     * @return int
      */
-    protected function perform(ConsoleWrapperInterface $console)
+    public function __invoke($projectDirectory = null)
     {
-        $destDirectory = $this->getDestDirectory();
+        $destDirectory = $this->getDestDirectory($projectDirectory);
 
         $templateFile = realpath(__DIR__ . '/../../template/.coveralls.yml');
         $destFile = $destDirectory . '.coveralls.yml';
 
         if (file_exists($destDirectory) === false) {
-            throw new FailureException("$destDirectory does not exist.");
+            $this->stdio->errln("$destDirectory does not exist.");
+            return Status::FAILURE;
         }
 
         if (copy($templateFile, $destFile)) {
-            return;
+            return Status::SUCCESS;
         }
 
-        throw new FailureException("Can not copy the files to the directory $destDirectory.");
+        $this->stdio->errln("Can not copy the files to the directory $destDirectory.");
+        return Status::FAILURE;
     }
 
     /**
+     * @param string|null $projectDirectory
      * @return string
      */
-    private function getDestDirectory()
+    private function getDestDirectory($projectDirectory = null)
     {
         $currentWorkDirectory = getcwd();
         $destDirectory = $currentWorkDirectory;
-
-        $projectDirectory = $this->options->getOption('project-directory');
 
         if (is_null($projectDirectory)) {
             return $destDirectory;
