@@ -51,7 +51,18 @@ class ReportTransferCommand extends AbstractCommand implements ReportTransferAwa
         $help->setDescription('Prints this usage information.');
 
         $options = new Getopt([$configuration, $debug, $help]);
+        $options->setBanner($this->getBannerMessage());
+
         return $options;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerMessage()
+    {
+        $commandName = $this->context->getCommandName();
+        return "Usage: %s $commandName [options] [operands]\n";
     }
 
     /**

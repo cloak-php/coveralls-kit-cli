@@ -42,7 +42,18 @@ class InitializeCommand extends AbstractCommand
         $help->setDescription('Prints this usage information.');
 
         $options = new Getopt([$projectDirectory, $help]);
+        $options->setBanner($this->getBannerMessage());
+
         return $options;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerMessage()
+    {
+        $commandName = $this->context->getCommandName();
+        return "Usage: %s $commandName [options] [operands]\n";
     }
 
     /**

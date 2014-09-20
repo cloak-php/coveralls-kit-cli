@@ -28,7 +28,18 @@ class HelpCommand extends AbstractCommand
     protected function getOptions()
     {
         $options = new Getopt();
+        $options->setBanner($this->getBannerMessage());
+
         return $options;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerMessage()
+    {
+        $commandName = $this->context->getCommandName();
+        return "Usage: %s $commandName [command]\n";
     }
 
     /**

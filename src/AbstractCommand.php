@@ -17,10 +17,6 @@ namespace coverallskit;
  */
 abstract class AbstractCommand implements CommandInterface
 {
-    /**
-     * @var array
-     */
-    protected $rules = [];
 
     /**
      * @var string
@@ -36,7 +32,6 @@ abstract class AbstractCommand implements CommandInterface
      * @var \Ulrichsg\Getopt\Getopt
      */
     protected $options;
-
 
     /**
      * @param ContextInterface $context
