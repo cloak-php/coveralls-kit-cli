@@ -33,7 +33,7 @@ abstract class AbstractCommand implements CommandInterface
     protected $context;
 
     /**
-     * @var \Zend\Console\Getopt
+     * @var \Ulrichsg\Getopt\Getopt
      */
     protected $options;
 
@@ -44,7 +44,7 @@ abstract class AbstractCommand implements CommandInterface
     public function __construct(ContextInterface $context)
     {
         $this->context = $context;
-        $this->options = $context->getCommandOptions($this->getRules());
+        $this->options = $context->getCommandOptions($this->getOptions());
     }
 
     /**
@@ -60,7 +60,7 @@ abstract class AbstractCommand implements CommandInterface
      */
     public function getUsageMessage()
     {
-        return $this->options->getUsageMessage();
+        return $this->options->getHelpText();
     }
 
     /**
@@ -81,11 +81,16 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
+     * @return \Ulrichsg\Getopt\Getopt;
+     */
+    abstract protected function getOptions();
+
+    /**
      * @throws HelpException
      */
     protected function prepare()
     {
-        if ($this->options->help) {
+        if ($this->options->getOption('h')) {
             throw new HelpException($this->getUsageMessage());
         }
     }

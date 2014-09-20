@@ -14,6 +14,8 @@ namespace coverallskit\command;
 use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
 use coverallskit\FailureException;
+use Ulrichsg\Getopt\Getopt;
+use Ulrichsg\Getopt\Option;
 
 
 /**
@@ -36,6 +38,20 @@ class InitializeCommand extends AbstractCommand
         'help|h-s' => 'Prints this usage information.',
     ];
 
+    /**
+     * @return \Ulrichsg\Getopt\Getopt;
+     */
+    protected function getOptions()
+    {
+        $projectDirectory = new Option('p', 'project-directory', Getopt::OPTIONAL_ARGUMENT);
+        $projectDirectory->setDescription('Initializes the directory.');
+
+        $help = new Option('h', 'help', Getopt::OPTIONAL_ARGUMENT);
+        $help->setDescription('Prints this usage information.');
+
+        $options = new Getopt([$projectDirectory, $help]);
+        return $options;
+    }
 
     /**
      * @param ConsoleWrapperInterface $console
