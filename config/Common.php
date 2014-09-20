@@ -3,6 +3,7 @@
 namespace Aura\Cli_Project\_Config;
 
 use coverallskit\command\InitializeCommand;
+use coverallskit\command\ReportTransferCommand;
 use Aura\Di\Config;
 use Aura\Di\Container;
 use Aura\Cli\Help;
@@ -72,6 +73,7 @@ class Common extends Config
 
         $dispatcher = $di->get('aura/cli-kernel:dispatcher');
         $dispatcher->setObject('init', $di->lazyNew(InitializeCommand::class));
+        $dispatcher->setObject('transfer', $di->lazyNew(ReportTransferCommand::class));
     }
 
     /**
@@ -82,13 +84,18 @@ class Common extends Config
     {
         $helpService = $di->get('aura/cli-kernel:help_service');
 
-        $help = $di->newInstance(Help::class);
+        $initHelp = $di->newInstance(Help::class);
+        $helpService->set('init', function () use ($initHelp) {
+            $initHelp->setUsage(['', '<project-directory>']);
+            $initHelp->setSummary('Create a coveralls.yml file.');
+            return $initHelp;
+        });
 
-        //
-        $helpService->set('init', function () use ($help) {
-            $help->setUsage(['', '<project-directory>']);
-            $help->setSummary('Create a coveralls.yml file.');
-            return $help;
+        $transferHelp = $di->newInstance(Help::class);
+        $helpService->set('transfer', function () use ($transferHelp) {
+            $transferHelp->setUsage(['']);
+            $transferHelp->setSummary('Send to coveralls the report file.');
+            return $transferHelp;
         });
     }
 

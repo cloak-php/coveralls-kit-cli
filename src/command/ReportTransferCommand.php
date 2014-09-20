@@ -11,64 +11,54 @@
 
 namespace coverallskit\command;
 
-use coverallskit\AbstractCommand;
-use coverallskit\ConsoleWrapperInterface;
 use coverallskit\ReportTransferAwareTrait;
 use coverallskit\ReportTransferAwareInterface;
-use coverallskit\RequireException;
-use coverallskit\FailureException;
 use coverallskit\Configuration;
 use coverallskit\ReportBuilder;
-use Ulrichsg\Getopt\Getopt;
-use Ulrichsg\Getopt\Option;
+use Aura\Cli\Stdio;
+use Aura\Cli\Context;
+use Aura\Cli\Status;
+
 
 /**
  * Class ReportTransferCommand
  * @package coverallskit\command
  */
-class ReportTransferCommand extends AbstractCommand implements ReportTransferAwareInterface
+class ReportTransferCommand implements ReportTransferAwareInterface
 {
 
     use ReportTransferAwareTrait;
 
     /**
-     * @var string
+     * @var Context
      */
-    protected $summaryMessage = 'Send to coveralls the report file.';
+    private $context;
 
     /**
-     * @return \Ulrichsg\Getopt\Getopt
+     * @var Stdio
      */
-    protected function getOptions()
+    private $stdio;
+
+    /**
+     * @param Context $context
+     * @param Stdio $stdio
+     */
+    public function __construct(Context $context, Stdio $stdio)
     {
-        $configuration = new Option('c', 'config', Getopt::REQUIRED_ARGUMENT);
-        $configuration->setDescription('Read configuration from YAML file.');
-
-        $debug = new Option('d', 'debug', Getopt::OPTIONAL_ARGUMENT);
-        $debug->setDescription('Only generate a report file.');
-
-        $help = new Option('h', 'help', Getopt::OPTIONAL_ARGUMENT);
-        $help->setDescription('Prints this usage information.');
-
-        $options = new Getopt([$configuration, $debug, $help]);
-        return $options;
+        $this->context = $context;
+        $this->stdio = $stdio;
     }
 
     /**
-     * @param ConsoleWrapperInterface $console
+     * @param string $configFile
      */
-    protected function perform(ConsoleWrapperInterface $console)
+    public function __invoke($configFile)
     {
-        $config = $this->options->getOption('config');
-
-        if (empty($config)) {
-            throw new RequireException('config option is required.');
-        }
-
-        $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $config;
+        $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $configFile;
 
         if (file_exists($configurationPath) === false) {
-            throw new FailureException("File $configurationPath is not found");
+            $this->stdio->errln("File $configurationPath is not found");
+            return Status::FAILURE;
         }
 
         $configuration = Configuration::loadFromFile($configurationPath);
@@ -77,12 +67,17 @@ class ReportTransferCommand extends AbstractCommand implements ReportTransferAwa
         $report = $reportBuilder->build();
         $report->save();
 
-        if ($this->options->getOption('debug')) {
+        $options = $this->context->getopt(['d::']);
+
+        if ($options->get('d')) {
+            return Status::SUCCESS;
             return;
         }
 
         $report->setReportTransfer($this->getReportTransfer());
         $report->upload();
+
+        return Status::SUCCESS;
     }
 
 }
