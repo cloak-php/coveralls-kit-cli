@@ -3,7 +3,7 @@
 namespace coverallskit\spec\command;
 
 use coverallskit\command\ReportTransferCommand;
-use coverallskit\ReportUpLoaderInterface;
+use coverallskit\ReportTransferInterface;
 use coverallskit\entity\ReportInterface;
 use coverallskit\ContextInterface;
 use coverallskit\HelpException;
@@ -42,6 +42,14 @@ describe('ReportTransferCommand', function() {
 
     describe('execute', function() {
         before(function () {
+            $this->rootDirectory = realpath(__DIR__ . '/../../');
+            $this->tmpDirectory = $this->rootDirectory . '/spec/tmp/clover.xml';
+            $this->fixtureDirectory = $this->rootDirectory . '/spec/fixtures/';
+
+            $content = file_get_contents($this->fixtureDirectory . 'clover.xml');
+            $content = sprintf($content, $this->rootDirectory, $this->rootDirectory);
+            file_put_contents($this->tmpDirectory, $content);
+
             $this->prophet = new Prophet();
 
             $this->context = $this->prophet->prophesize(ContextInterface::class);
@@ -49,12 +57,12 @@ describe('ReportTransferCommand', function() {
             $this->context->getCommandName()->shouldNotBeCalled();
             $this->context->getCommandArguments()->shouldNotBeCalled();
             $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                $options = new Getopt($args[0], ['-c', '.coveralls.yml']);
+                $options = new Getopt($args[0], ['-c', 'spec/fixtures/coveralls.yml']);
                 $options->parse();
                 return $options;
             });
 
-            $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+            $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
             $this->reportTransfer->setClient()->shouldNotBeCalled();
             $this->reportTransfer->getClient()->shouldNotBeCalled();
             $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
@@ -63,6 +71,7 @@ describe('ReportTransferCommand', function() {
             $this->command->setReportTransfer($this->reportTransfer->reveal());
             $this->command->execute(new ConsoleWrapper());
         });
+
         it('transfer report file', function() {
             $this->prophet->checkPredictions();
         });
@@ -76,12 +85,12 @@ describe('ReportTransferCommand', function() {
                 $this->context->getCommandName()->shouldNotBeCalled();
                 $this->context->getCommandArguments()->shouldNotBeCalled();
                 $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                    $options = new Getopt($args[0], ['-c', '.coveralls.yml', '-d']);
+                    $options = new Getopt($args[0], ['-c', 'spec/fixtures/coveralls.yml', '-d']);
                     $options->parse();
                     return $options;
                 });
 
-                $this->reportTransfer = $this->prophet->prophesize(ReportUpLoaderInterface::class);
+                $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
                 $this->reportTransfer->setClient()->shouldNotBeCalled();
                 $this->reportTransfer->getClient()->shouldNotBeCalled();
                 $this->reportTransfer->upload()->shouldNotBeCalled();

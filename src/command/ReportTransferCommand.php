@@ -13,8 +13,8 @@ namespace coverallskit\command;
 
 use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
-use coverallskit\ReportUpLoaderInterface;
-use coverallskit\ReportUpLoader;
+use coverallskit\ReportTransferAwareTrait;
+use coverallskit\ReportTransferAwareInterface;
 use coverallskit\RequireException;
 use coverallskit\FailureException;
 use coverallskit\Configuration;
@@ -25,13 +25,10 @@ use coverallskit\ReportBuilder;
  * Class ReportTransferCommand
  * @package coverallskit\command
  */
-class ReportTransferCommand extends AbstractCommand
+class ReportTransferCommand extends AbstractCommand implements ReportTransferAwareInterface
 {
 
-    /**
-     * @var \coverallskit\ReportUpLoaderInterface
-     */
-    private $reportTransfer;
+    use ReportTransferAwareTrait;
 
     /**
      * @var array
@@ -43,25 +40,6 @@ class ReportTransferCommand extends AbstractCommand
     ];
 
     /**
-     * @param ReportUpLoaderInterface $uploader
-     * @return $this
-     */
-    public function setReportTransfer(ReportUpLoaderInterface $uploader)
-    {
-        $this->reportTransfer = $uploader;
-        return $this;
-    }
-
-    /**
-     * @return ReportUpLoader|ReportUpLoaderInterface
-     */
-    public function getReportTransfer()
-    {
-        $this->reportTransfer = $this->reportTransfer ?: new ReportUpLoader();
-        return $this->reportTransfer;
-    }
-
-    /**
      * @param ConsoleWrapperInterface $console
      */
     protected function perform(ConsoleWrapperInterface $console)
@@ -70,13 +48,13 @@ class ReportTransferCommand extends AbstractCommand
             throw new RequireException('config option is required.');
         }
 
-        $configrationPath = getcwd() . DIRECTORY_SEPARATOR . $this->options->config;
+        $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $this->options->config;
 
-        if (file_exists($configrationPath) === false) {
-            throw new FailureException("File $configrationPath is not found");
+        if (file_exists($configurationPath) === false) {
+            throw new FailureException("File $configurationPath is not found");
         }
 
-        $configuration = Configuration::loadFromFile($configrationPath);
+        $configuration = Configuration::loadFromFile($configurationPath);
         $reportBuilder = ReportBuilder::fromConfiguration($configuration);
 
         $report = $reportBuilder->build();
@@ -86,7 +64,7 @@ class ReportTransferCommand extends AbstractCommand
             return;
         }
 
-        $report->setUploader($this->getReportTransfer());
+        $report->setReportTransfer($this->getReportTransfer());
         $report->upload();
     }
 
