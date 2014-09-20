@@ -71,7 +71,6 @@ class ReportTransferCommand implements ReportTransferAwareInterface
 
         if ($options->get('d')) {
             return Status::SUCCESS;
-            return;
         }
 
         $report->setReportTransfer($this->getReportTransfer());
