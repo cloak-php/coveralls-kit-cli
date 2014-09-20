@@ -31,14 +31,6 @@ class InitializeCommand extends AbstractCommand
     protected $summaryMessage = 'Create a coveralls.yml file.';
 
     /**
-     * @var array
-     */
-    protected $rules = [
-        'project-directory|p-s' => 'Initializes the directory.',
-        'help|h-s' => 'Prints this usage information.',
-    ];
-
-    /**
      * @return \Ulrichsg\Getopt\Getopt;
      */
     protected function getOptions()

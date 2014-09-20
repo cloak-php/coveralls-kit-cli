@@ -73,14 +73,6 @@ abstract class AbstractCommand implements CommandInterface
     }
 
     /**
-     * @return array
-     */
-    protected function getRules()
-    {
-        return $this->rules;
-    }
-
-    /**
      * @return \Ulrichsg\Getopt\Getopt;
      */
     abstract protected function getOptions();

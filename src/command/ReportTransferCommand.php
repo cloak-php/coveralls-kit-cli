@@ -37,15 +37,6 @@ class ReportTransferCommand extends AbstractCommand implements ReportTransferAwa
     protected $summaryMessage = 'Send to coveralls the report file.';
 
     /**
-     * @var array
-     */
-    protected $rules = [
-//        'config|c=s' => '',
-  //      'debug|d-s' => '',
-    //    'help|h-s' => '',
-    ];
-
-    /**
      * @return \Ulrichsg\Getopt\Getopt
      */
     protected function getOptions()
