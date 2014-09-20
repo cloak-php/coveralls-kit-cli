@@ -37,9 +37,6 @@
             "Aura\\Cli_Project\\_Config\\": "config/"
         }
     },
-    "autoload-dev": {
-        "psr-4": { "coverallskit\\spec\\fixture\\": "spec/fixtures/" }
-    },
     "extra": {
         "aura": {
             "type": "project",

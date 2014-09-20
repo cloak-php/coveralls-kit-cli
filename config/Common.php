@@ -93,8 +93,13 @@ class Common extends Config
 
         $transferHelp = $di->newInstance(Help::class);
         $helpService->set('transfer', function () use ($transferHelp) {
-            $transferHelp->setUsage(['']);
+            $transferHelp->setUsage([
+                'transfer <config-file> [<options>]'
+            ]);
             $transferHelp->setSummary('Send to coveralls the report file.');
+            $transferHelp->setOptions([
+                'd::' => 'Only generate a report file.'
+            ]);
             return $transferHelp;
         });
     }
