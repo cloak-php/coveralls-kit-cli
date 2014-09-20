@@ -9,14 +9,6 @@
  * with this source code in the file LICENSE.
  */
 
-namespace coverallskit\command;
-
-use UnexpectedValueException;
-
-/**
- * Class RequireException
- * @package coverallskit\command
- */
-class CommandNotFoundException extends UnexpectedValueException
-{
+if (isset($_ENV['AURA_CONFIG_MODE']) === false) {
+    $_ENV['AURA_CONFIG_MODE'] = 'dev';
 }
