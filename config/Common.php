@@ -12,21 +12,32 @@ use Aura\Di\Container;
 class Common extends Config
 {
 
+    /**
+     * @param Container $di
+     * @return null|void
+     * @throws \Aura\Di\Exception\ContainerLocked
+     * @throws \Aura\Di\Exception\ServiceNotObject
+     */
     public function define(Container $di)
     {
-        var_dump('aaa');
-
         $di->set('aura/project-kernel:logger', $di->newInstance('Monolog\Logger'));
     }
 
+    /**
+     * @param Container $di
+     * @return null|void
+     */
     public function modify(Container $di)
     {
-var_dump('aaa');
         $this->modifyLogger($di);
         $this->modifyCliDispatcher($di);
         $this->modifyCliHelpService($di);
     }
 
+    /**
+     * @param Container $di
+     * @throws \Aura\Di\Exception\ServiceNotFound
+     */
     protected function modifyLogger(Container $di)
     {
         $project = $di->get('project');
@@ -42,6 +53,10 @@ var_dump('aaa');
         ));
     }
 
+    /**
+     * @param Container $di
+     * @throws \Aura\Di\Exception\ServiceNotFound
+     */
     protected function modifyCliDispatcher(Container $di)
     {
         $context = $di->get('aura/cli-kernel:context');
@@ -52,13 +67,16 @@ var_dump('aaa');
         $dispatcher->setObject(
             'hello',
             function ($name = 'World') use ($context, $stdio, $logger) {
-var_dump('aa');
                 $stdio->outln("Hello {$name}!");
                 $logger->debug("Said hello to '{$name}'");
             }
         );
     }
 
+    /**
+     * @param Container $di
+     * @throws \Aura\Di\Exception\ServiceNotFound
+     */
     protected function modifyCliHelpService(Container $di)
     {
         $helpService = $di->get('aura/cli-kernel:help_service');
