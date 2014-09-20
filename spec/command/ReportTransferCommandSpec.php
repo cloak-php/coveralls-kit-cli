@@ -67,8 +67,7 @@ describe('ReportTransferCommand', function() {
                 $this->context = $this->factory->newContext([
                     'argv' => ['-d']
                 ]);
-
-                $this->command = new ReportTransferCommand($this->context);
+                $this->command = new ReportTransferCommand($this->context, $this->stdio);
                 $this->command->setReportTransfer($this->reportTransfer->reveal());
                 $this->status = $this->command('spec/fixtures/coveralls.yml');
             });

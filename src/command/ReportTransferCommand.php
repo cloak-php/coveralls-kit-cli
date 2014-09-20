@@ -70,7 +70,7 @@ class ReportTransferCommand implements ReportTransferAwareInterface
 
         $options = $this->context->getopt(['d::']);
 
-        if ($options->get('d')) {
+        if ($options->get('-d')) {
             return Status::SUCCESS;
         }
 
