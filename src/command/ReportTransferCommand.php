@@ -19,7 +19,8 @@ use coverallskit\RequireException;
 use coverallskit\FailureException;
 use coverallskit\Configuration;
 use coverallskit\ReportBuilder;
-
+use Ulrichsg\Getopt\Getopt;
+use Ulrichsg\Getopt\Option;
 
 /**
  * Class ReportTransferCommand
@@ -39,21 +40,41 @@ class ReportTransferCommand extends AbstractCommand implements ReportTransferAwa
      * @var array
      */
     protected $rules = [
-        'config|c=s' => 'Read configuration from YAML file.',
-        'debug|d-s' => 'Only generate a report file.',
-        'help|h-s' => 'Prints this usage information.',
+//        'config|c=s' => '',
+  //      'debug|d-s' => '',
+    //    'help|h-s' => '',
     ];
+
+    /**
+     * @return \Ulrichsg\Getopt\Getopt
+     */
+    protected function getOptions()
+    {
+        $configuration = new Option('c', 'config', Getopt::REQUIRED_ARGUMENT);
+        $configuration->setDescription('Read configuration from YAML file.');
+
+        $debug = new Option('d', 'debug', Getopt::OPTIONAL_ARGUMENT);
+        $debug->setDescription('Only generate a report file.');
+
+        $help = new Option('h', 'help', Getopt::OPTIONAL_ARGUMENT);
+        $help->setDescription('Prints this usage information.');
+
+        $options = new Getopt([$configuration, $debug, $help]);
+        return $options;
+    }
 
     /**
      * @param ConsoleWrapperInterface $console
      */
     protected function perform(ConsoleWrapperInterface $console)
     {
-        if (empty($this->options->config)) {
+        $config = $this->options->getOption('config');
+
+        if (empty($config)) {
             throw new RequireException('config option is required.');
         }
 
-        $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $this->options->config;
+        $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $config;
 
         if (file_exists($configurationPath) === false) {
             throw new FailureException("File $configurationPath is not found");

@@ -5,63 +5,32 @@ namespace coverallskit\spec\command;
 use coverallskit\command\ReportTransferCommand;
 use coverallskit\ReportTransferInterface;
 use coverallskit\entity\ReportInterface;
-use coverallskit\ContextInterface;
 use coverallskit\HelpException;
 use coverallskit\RequireException;
 use coverallskit\ConsoleWrapper;
 use coverallskit\FailureException;
 use Prophecy\Prophet;
 use Prophecy\Argument;
-use Zend\Console\Getopt;
+use coverallskit\Context;
 
 
 describe('ReportTransferCommand', function() {
-
     describe('getSummaryMessage', function() {
         before(function () {
-            $this->prophet = new Prophet();
-
-            $this->context = $this->prophet->prophesize(ContextInterface::class);
-            $this->context->getScriptName()->shouldNotBeCalled();
-            $this->context->getCommandName()->shouldNotBeCalled();
-            $this->context->getCommandArguments()->shouldNotBeCalled();
-            $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                $options = new Getopt($args[0], []);
-                $options->parse();
-                return $options;
-            });
-
-            $this->command = new ReportTransferCommand($this->context->reveal());
+            $this->context = new Context([]);
+            $this->command = new ReportTransferCommand($this->context);
         });
         it('return summary message', function() {
             expect($this->command->getSummaryMessage())->toEqual('Send to coveralls the report file.');
         });
-        it('check mock object expectations', function() {
-            $this->prophet->checkPredictions();
-        });
     });
-
     describe('getUsageMessage', function() {
         before(function () {
-            $this->prophet = new Prophet();
-
-            $this->context = $this->prophet->prophesize(ContextInterface::class);
-            $this->context->getScriptName()->shouldNotBeCalled();
-            $this->context->getCommandName()->shouldNotBeCalled();
-            $this->context->getCommandArguments()->shouldNotBeCalled();
-            $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                $options = new Getopt($args[0], ['-c', 'foo.yml']);
-                $options->parse();
-                return $options;
-            });
-
-            $this->command = new ReportTransferCommand($this->context->reveal());
+            $this->context = new Context([]);
+            $this->command = new ReportTransferCommand($this->context);
         });
         it('return help message', function() {
             expect($this->command->getUsageMessage())->toBeA('string');
-        });
-        it('check mock object expectations', function() {
-            $this->prophet->checkPredictions();
         });
     });
 
@@ -77,50 +46,32 @@ describe('ReportTransferCommand', function() {
 
             $this->prophet = new Prophet();
 
-            $this->context = $this->prophet->prophesize(ContextInterface::class);
-            $this->context->getScriptName()->shouldNotBeCalled();
-            $this->context->getCommandName()->shouldNotBeCalled();
-            $this->context->getCommandArguments()->shouldNotBeCalled();
-            $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                $options = new Getopt($args[0], ['-c', 'spec/fixtures/coveralls.yml']);
-                $options->parse();
-                return $options;
-            });
+            $this->context = new Context(['bin/coverallskit', 'transfer', '-c', 'spec/fixtures/coveralls.yml']);
 
             $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
             $this->reportTransfer->setClient()->shouldNotBeCalled();
             $this->reportTransfer->getClient()->shouldNotBeCalled();
             $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
 
-            $this->command = new ReportTransferCommand($this->context->reveal());
+            $this->command = new ReportTransferCommand($this->context);
             $this->command->setReportTransfer($this->reportTransfer->reveal());
             $this->command->execute(new ConsoleWrapper());
         });
-
         it('transfer report file', function() {
             $this->prophet->checkPredictions();
         });
-
         context('when use debug option', function() {
             before(function () {
                 $this->prophet = new Prophet();
-
-                $this->context = $this->prophet->prophesize(ContextInterface::class);
-                $this->context->getScriptName()->shouldNotBeCalled();
-                $this->context->getCommandName()->shouldNotBeCalled();
-                $this->context->getCommandArguments()->shouldNotBeCalled();
-                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                    $options = new Getopt($args[0], ['-c', 'spec/fixtures/coveralls.yml', '-d']);
-                    $options->parse();
-                    return $options;
-                });
 
                 $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
                 $this->reportTransfer->setClient()->shouldNotBeCalled();
                 $this->reportTransfer->getClient()->shouldNotBeCalled();
                 $this->reportTransfer->upload()->shouldNotBeCalled();
 
-                $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->context = new Context(['bin/coverallskit', 'transfer', '-c', 'spec/fixtures/coveralls.yml', '-d']);
+
+                $this->command = new ReportTransferCommand($this->context);
                 $this->command->setReportTransfer($this->reportTransfer->reveal());
                 $this->command->execute(new ConsoleWrapper());
             });
@@ -128,82 +79,37 @@ describe('ReportTransferCommand', function() {
                 $this->prophet->checkPredictions();
             });
         });
-
         context('when use --help or -h option', function() {
             before(function () {
-                $this->prophet = new Prophet();
-
-                $this->context = $this->prophet->prophesize(ContextInterface::class);
-                $this->context->getScriptName()->shouldNotBeCalled();
-                $this->context->getCommandName()->shouldNotBeCalled();
-                $this->context->getCommandArguments()->shouldNotBeCalled();
-                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                    $options = new Getopt($args[0], ['-h']);
-                    $options->parse();
-                    return $options;
-                });
-
-                $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->context = new Context(['bin/coverallskit', 'transfer', '-h']);
+                $this->command = new ReportTransferCommand($this->context);
             });
             it('throw HelpException', function() {
                 expect(function() {
                     $this->command->execute(new ConsoleWrapper());
                 })->toThrow(HelpException::class);
             });
-            it('check mock object expectations', function() {
-                $this->prophet->checkPredictions();
-            });
         });
-
         context('when unuse --config or -c option', function() {
             before(function () {
-                $this->prophet = new Prophet();
-
-                $this->context = $this->prophet->prophesize(ContextInterface::class);
-                $this->context->getScriptName()->shouldNotBeCalled();
-                $this->context->getCommandName()->shouldNotBeCalled();
-                $this->context->getCommandArguments()->shouldNotBeCalled();
-                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                    $options = new Getopt($args[0], []);
-                    $options->parse();
-                    return $options;
-                });
-
-                $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->context = new Context(['bin/coverallskit', 'transfer']);
+                $this->command = new ReportTransferCommand($this->context);
             });
             it('throw RequireException', function() {
                 expect(function() {
                     $this->command->execute(new ConsoleWrapper());
                 })->toThrow(RequireException::class);
             });
-            it('check mock object expectations', function() {
-                $this->prophet->checkPredictions();
-            });
         });
-
         context('when configration file not exists', function() {
             before(function () {
-                $this->prophet = new Prophet();
-
-                $this->context = $this->prophet->prophesize(ContextInterface::class);
-                $this->context->getScriptName()->shouldNotBeCalled();
-                $this->context->getCommandName()->shouldNotBeCalled();
-                $this->context->getCommandArguments()->shouldNotBeCalled();
-                $this->context->getCommandOptions(Argument::type('array'))->will(function(array $args) {
-                    $options = new Getopt($args[0], ['-c', 'not_found.yml']);
-                    $options->parse();
-                    return $options;
-                });
-
-                $this->command = new ReportTransferCommand($this->context->reveal());
+                $this->context = new Context(['bin/coverallskit', 'transfer', '-c', 'not_found.yml']);
+                $this->command = new ReportTransferCommand($this->context);
             });
             it('throw FailureException', function() {
                 expect(function() {
                     $this->command->execute(new ConsoleWrapper());
                 })->toThrow(FailureException::class);
-            });
-            it('check mock object expectations', function() {
-                $this->prophet->checkPredictions();
             });
         });
     });
