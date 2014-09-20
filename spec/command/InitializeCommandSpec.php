@@ -3,10 +3,6 @@
 namespace coverallskit\spec\command;
 
 use coverallskit\command\InitializeCommand;
-//use coverallskit\Context;
-//use coverallskit\HelpException;
-//use coverallskit\ConsoleWrapper;/
-//use coverallskit\FailureException;
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\CliFactory;
