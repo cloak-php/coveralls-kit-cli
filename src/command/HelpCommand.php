@@ -13,6 +13,7 @@ namespace coverallskit\command;
 
 use coverallskit\AbstractCommand;
 use coverallskit\ConsoleWrapperInterface;
+use Ulrichsg\Getopt\Getopt;
 
 /**
  * Class HelpCommand
@@ -20,6 +21,15 @@ use coverallskit\ConsoleWrapperInterface;
  */
 class HelpCommand extends AbstractCommand
 {
+
+    /**
+     * @return \Ulrichsg\Getopt\Getopt;
+     */
+    protected function getOptions()
+    {
+        $options = new Getopt();
+        return $options;
+    }
 
     /**
      * @param ConsoleWrapperInterface $console
