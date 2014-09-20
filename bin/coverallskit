@@ -25,28 +25,10 @@ if (!$composerInstall) {
 
 unset($composerInstall, $files, $file);
 
+use Aura\Project_Kernel\Factory;
+use Aura\Cli_Kernel\CliKernel;
 
-use coverallskit\Application;
-use coverallskit\ConsoleWrapper;
-use coverallskit\CommandFactory;
-use coverallskit\command\InitializeCommand;
-use coverallskit\command\ReportTransferCommand;
-use coverallskit\command\HelpCommand;
-use \Exception as CLIException;
-
-$application = new Application(
-    new CommandFactory([
-        'init' => InitializeCommand::class,
-        'transfer' => ReportTransferCommand::class,
-        'help' => HelpCommand::class
-    ]),
-    new ConsoleWrapper
-);
-
-try {
-    $application->run($argv, $_ENV);
-} catch (CLIException $exception) {
-    echo $exception->getMessage();
-    exit(1);
-}
-exit(0);
+$path = dirname(__DIR__);
+$kernel = (new Factory)->newKernel($path, CliKernel::class);
+$status = $kernel();
+exit($status);
