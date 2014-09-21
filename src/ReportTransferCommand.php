@@ -40,6 +40,12 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     private $stdio;
 
     /**
+     * @var array
+     */
+    private $optionRules = ['d::'];
+
+
+    /**
      * @param Context $context
      * @param Stdio $stdio
      */
@@ -61,13 +67,7 @@ class ReportTransferCommand implements ReportTransferAwareInterface
             return $this->configurationFileNotFound($configFilePath);
         }
 
-        $options = $this->context->getopt(['d::']);
-
-        if ($options->get('-d')) {
-            return $this->makeReport($configFilePath);
-        } else {
-            return $this->sendReport($configFilePath);
-        }
+        return $this->performAction($configFilePath);
     }
 
     /**
@@ -78,6 +78,20 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     {
         $this->stdio->errln("File $configurationPath is not found");
         return Status::FAILURE;
+    }
+
+    /**
+     * @return int
+     */
+    private function performAction($configFilePath)
+    {
+        $options = $this->context->getopt($this->optionRules);
+
+        if ($options->get('-d')) {
+            return $this->makeReport($configFilePath);
+        } else {
+            return $this->sendReport($configFilePath);
+        }
     }
 
     /**
