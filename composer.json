@@ -42,7 +42,6 @@
             "type": "project",
             "config": {
                 "common": "Aura\\Cli_Project\\_Config\\Common",
-                "dev": "Aura\\Cli_Project\\_Config\\Dev",
                 "test": "Aura\\Cli_Project\\_Config\\Test",
                 "prod": "Aura\\Cli_Project\\_Config\\Prod"
             }
