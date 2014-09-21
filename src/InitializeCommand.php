@@ -14,6 +14,10 @@ namespace coverallskit;
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\Status;
+use Eloquent\Pathogen\Factory\PathFactory;
+use Eloquent\Pathogen\RelativePath;
+use Eloquent\Pathogen\AbstractPath;
+use Exception;
 
 /**
  * Class InitializeCommand
@@ -33,6 +37,16 @@ class InitializeCommand
     private $stdio;
 
     /**
+     * @var \Eloquent\Pathogen\AbsolutePath
+     */
+    private $destDirectoryPath;
+
+    /**
+     * @var \Eloquent\Pathogen\AbsolutePath
+     */
+    private $destDirectoryFilePath;
+
+    /**
      * @param Context $context
      * @param Stdio $stdio
      */
@@ -48,41 +62,77 @@ class InitializeCommand
      */
     public function __invoke($projectDirectory = null)
     {
-        $destDirectory = $this->getDestDirectory($projectDirectory);
-
-        $templateFile = realpath(__DIR__ . '/../template/.coveralls.yml');
-        $destFile = $destDirectory . '.coveralls.yml';
-
-        if (file_exists($destDirectory) === false) {
-            $this->stdio->errln("$destDirectory does not exist.");
-            return Status::FAILURE;
+        try {
+            $this->prepare($projectDirectory);
+        } catch (DirectoryNotFoundException $exception) {
+            return $this->failed($exception);
         }
 
-        if (copy($templateFile, $destFile)) {
-            return Status::SUCCESS;
-        }
-
-        $this->stdio->errln("Can not copy the files to the directory $destDirectory.");
-        return Status::FAILURE;
+        return $this->performAction();
     }
 
     /**
      * @param string|null $projectDirectory
-     * @return string
      */
-    private function getDestDirectory($projectDirectory = null)
+    private function prepare($projectDirectory = null)
     {
-        $currentWorkDirectory = getcwd();
-        $destDirectory = $currentWorkDirectory;
+        $projectRelativeDirectory = $projectDirectory;
+        $configFilePath = RelativePath::fromString('.coveralls.yml');
+        $destDirectoryPath = PathFactory::instance()->create(getcwd());
 
-        if (is_null($projectDirectory)) {
-            return $destDirectory;
+        if (is_null($projectRelativeDirectory)) {
+            $projectRelativeDirectory = AbstractPath::SELF_ATOM;
         }
 
-        $projectDirectory = preg_replace('/^\/(.+)/', '$1', $projectDirectory);
-        $destDirectory .= DIRECTORY_SEPARATOR . $projectDirectory . DIRECTORY_SEPARATOR;
+        $projectDirectoryPath = RelativePath::fromString($projectRelativeDirectory);
+        $absoluteDestDirectoryPath = $destDirectoryPath->resolve($projectDirectoryPath);
 
-        return $destDirectory;
+        $this->destDirectoryPath = $absoluteDestDirectoryPath;
+        $this->destDirectoryFilePath = $absoluteDestDirectoryPath->resolve($configFilePath);
+
+        if (file_exists((string) $this->destDirectoryPath)) {
+            return;
+        }
+
+        throw new DirectoryNotFoundException("'$this->destDirectoryPath' does not exist.");
+    }
+
+    /**
+     * @param Exception $exception
+     * @return int
+     */
+    private function failed(Exception $exception)
+    {
+        $exception->printMessage($this->stdio);
+        return Status::FAILURE;
+    }
+
+    /**
+     * @return int
+     */
+    private function performAction()
+    {
+        try {
+            $this->copyTemplateFile();
+        } catch (TemplateCopyFailedException $exception) {
+            return $this->failed($exception);
+        }
+
+        return Status::SUCCESS;
+    }
+
+    /**
+     * @return int
+     */
+    private function copyTemplateFile()
+    {
+        $templateFile = realpath(__DIR__ . '/../template/.coveralls.yml');
+
+        if (copy($templateFile, (string) $this->destDirectoryFilePath)) {
+            return;
+        }
+
+        throw new TemplateCopyFailedException("Can not copy the files to the directory $this->destDirectoryPath.");
     }
 
 }
