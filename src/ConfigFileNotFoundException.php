@@ -17,7 +17,7 @@ use UnexpectedValueException;
  * Class ConfigFileNotFoundException
  * @package coverallskit
  */
-class ConfigFileNotFoundException extends UnexpectedValueException
+class ConfigFileNotFoundException extends UnexpectedValueException implements PrintableExceptionInterface
 {
     use PrintFailedMessageTrait;
 }

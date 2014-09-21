@@ -98,10 +98,10 @@ class InitializeCommand
     }
 
     /**
-     * @param Exception $exception
+     * @param PrintableExceptionInterface $exception
      * @return int
      */
-    private function failed(Exception $exception)
+    private function failed(PrintableExceptionInterface $exception)
     {
         $exception->printMessage($this->stdio);
         return Status::FAILURE;

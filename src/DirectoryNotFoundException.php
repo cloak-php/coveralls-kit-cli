@@ -17,7 +17,7 @@ use UnexpectedValueException;
  * Class DirectoryNotFoundException
  * @package coverallskit
  */
-class DirectoryNotFoundException extends UnexpectedValueException
+class DirectoryNotFoundException extends UnexpectedValueException implements PrintableExceptionInterface
 {
     use PrintFailedMessageTrait;
 }

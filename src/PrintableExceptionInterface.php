@@ -11,13 +11,18 @@
 
 namespace coverallskit;
 
-use UnexpectedValueException;
+use Aura\Cli\Stdio;
 
 /**
- * Class TemplateCopyFailedException
+ * Interface PrintableExceptionInterface
  * @package coverallskit
  */
-class TemplateCopyFailedException extends UnexpectedValueException implements PrintableExceptionInterface
+interface PrintableExceptionInterface
 {
-    use PrintFailedMessageTrait;
+
+    /**
+     * @param Stdio $stdio
+     */
+    public function printMessage(Stdio $stdio);
+
 }
