@@ -10,5 +10,5 @@
  */
 
 if (isset($_ENV['AURA_CONFIG_MODE']) === false) {
-    $_ENV['AURA_CONFIG_MODE'] = 'dev';
+    $_ENV['AURA_CONFIG_MODE'] = 'prod';
 }

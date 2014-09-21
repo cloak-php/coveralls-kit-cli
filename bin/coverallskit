@@ -34,9 +34,26 @@ if (!$composerInstall) {
 
 unset($composerInstall, $files, $file);
 
-use Aura\Project_Kernel\Factory;
+use Aura\Di\ContainerBuilder;
+use Aura\Project_Kernel\Project;
 use Aura\Cli_Kernel\CliKernel;
 
-$kernel = (new Factory)->newKernel($kernelPath, CliKernel::class);
+require_once __DIR__ . '/../config/_env.php';
+
+$project = new Project(
+    $kernelPath,
+    $_ENV['AURA_CONFIG_MODE'],
+    json_decode(file_get_contents("{$kernelPath}/composer.json")),
+    json_decode(file_get_contents("{$kernelPath}/vendor/composer/installed.json"))
+);
+
+$builder = new ContainerBuilder();
+
+$args = ['project' => $project];
+$config = $project->getConfigClasses();
+
+$di = $builder->newInstance($args, $config);
+$kernel = $di->newInstance(CliKernel::class);
+
 $status = $kernel();
 exit($status);
