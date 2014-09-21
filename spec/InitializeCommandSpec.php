@@ -61,12 +61,11 @@ describe('InitializeCommand', function() {
         context('when directory not writable', function() {
             before(function () {
                 $this->destReadOnlyDirectory = __DIR__ . '/tmp/readonly';
-                chmod($this->destReadOnlyDirectory, 777);
+                mkdir($this->destReadOnlyDirectory);
                 chmod($this->destReadOnlyDirectory, 644);
                 $this->status = $this->command('spec/tmp/readonly');
-            });
-            after(function () {
                 chmod($this->destReadOnlyDirectory, 777);
+                rmdir($this->destReadOnlyDirectory);
             });
             it('return Status::FAILURE', function() {
                 expect($this->status)->toEqual(Status::FAILURE);
