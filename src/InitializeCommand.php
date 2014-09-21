@@ -69,7 +69,7 @@ class InitializeCommand
             return $this->directoryNotFound($exception);
         }
 
-        return $this->copyTemplateFile();
+        return $this->performAction();
     }
 
     /**
@@ -108,6 +108,26 @@ class InitializeCommand
         return Status::FAILURE;
     }
 
+    private function templateCopyFailed($exception)
+    {
+        $this->stdio->errln($exception->getMessage());
+        return Status::FAILURE;
+    }
+
+    /**
+     * @return int
+     */
+    private function performAction()
+    {
+        try {
+            $this->copyTemplateFile();
+        } catch (TemplateCopyFailedException $exception) {
+            return $this->templateCopyFailed($exception);
+        }
+
+        return Status::SUCCESS;
+    }
+
     /**
      * @return int
      */
@@ -116,12 +136,10 @@ class InitializeCommand
         $templateFile = realpath(__DIR__ . '/../template/.coveralls.yml');
 
         if (copy($templateFile, (string) $this->destDirectoryFilePath)) {
-            return Status::SUCCESS;
+            return;
         }
 
-        $this->stdio->errln("Can not copy the files to the directory $this->destDirectoryPath.");
-
-        return Status::FAILURE;
+        throw new TemplateCopyFailedException("Can not copy the files to the directory $this->destDirectoryPath.");
     }
 
 }
