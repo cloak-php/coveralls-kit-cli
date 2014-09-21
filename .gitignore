@@ -1,0 +1,4 @@
+script/coveralls.json
+script/report.lcov
+spec/tmp/coveralls.json
+
