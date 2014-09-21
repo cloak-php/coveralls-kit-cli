@@ -11,6 +11,7 @@
 
 namespace coverallskit;
 
+use Aura\Cli\Stdio;
 use UnexpectedValueException;
 
 /**
@@ -19,5 +20,12 @@ use UnexpectedValueException;
  */
 class TemplateCopyFailedException extends UnexpectedValueException implements PrintableExceptionInterface
 {
-    use PrintFailedMessageTrait;
+    /**
+     * @param Stdio $stdio
+     */
+    public function printMessage(Stdio $stdio)
+    {
+        $stdio->errln('Command failed:');
+        $stdio->errln($this->getMessage());
+    }
 }
