@@ -9,6 +9,6 @@
  * with this source code in the file LICENSE.
  */
 
-if (isset($_ENV['AURA_CONFIG_MODE']) === false) {
-    $_ENV['AURA_CONFIG_MODE'] = 'prod';
+if (isset($_ENV['COVERALLS_KIT_CONFIG_MODE']) === false) {
+    $_ENV['COVERALLS_KIT_CONFIG_MODE'] = 'prod';
 }
