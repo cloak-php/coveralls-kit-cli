@@ -22,6 +22,7 @@ interface PrintableExceptionInterface
 
     /**
      * @param Stdio $stdio
+     * @return void
      */
     public function printMessage(Stdio $stdio);
 

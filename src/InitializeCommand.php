@@ -17,7 +17,6 @@ use Aura\Cli\Status;
 use Eloquent\Pathogen\Factory\PathFactory;
 use Eloquent\Pathogen\RelativePath;
 use Eloquent\Pathogen\AbstractPath;
-use Exception;
 
 /**
  * Class InitializeCommand
