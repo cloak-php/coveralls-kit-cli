@@ -69,7 +69,7 @@ class Common extends Config
     {
         $dispatcher = $di->get('aura/cli-kernel:dispatcher');
         $dispatcher->setObject('init', $di->lazyNew(InitializeCommand::class));
-        $dispatcher->setObject('transfer', $di->lazyNew(ReportTransferCommand::class));
+        $dispatcher->setObject('send', $di->lazyNew(ReportTransferCommand::class));
     }
 
     /**
@@ -91,7 +91,7 @@ class Common extends Config
         $sendHelp = $di->newInstance(Help::class);
         $helpService->set('send', function () use ($sendHelp) {
             $sendHelp->setUsage([
-                'send <config-file> [<options>]'
+                '<config-file> [<options>]'
             ]);
             $sendHelp->setSummary('Send to coveralls the report file.');
             $sendHelp->setOptions([
