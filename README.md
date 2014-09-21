@@ -31,7 +31,7 @@ The file name is **.coveralls.yml**.
 Send the report in coveralls **transfer** command.  
 write to the configuration file specified in the report.
 
-	vendor/bin/coverallskit transfer -c .coveralls.yml
+	vendor/bin/coverallskit send -c .coveralls.yml
 
 ## Configuration file format 
 
@@ -42,7 +42,6 @@ write to the configuration file specified in the report.
 	    file: tmp/clover.xml
 	  output: tmp/coveralls.json
 	repositoryDirectory: .
-
 
 ## Run only unit test
 
