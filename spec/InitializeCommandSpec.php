@@ -2,7 +2,7 @@
 
 namespace coverallskit\spec;
 
-use coverallskit\command\InitializeCommand;
+use coverallskit\InitializeCommand;
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\CliFactory;
@@ -18,7 +18,7 @@ describe('InitializeCommand', function() {
             $this->context = $this->factory->newContext([]);
             $this->command = new InitializeCommand($this->context, $this->stdio);
         });
-        context('when default', function() {
+        context('when specify a project directory', function() {
             before(function () {
                 $this->status = $this->command('spec/tmp');
             });
@@ -34,7 +34,7 @@ describe('InitializeCommand', function() {
         });
         context('when directory not found', function() {
             before(function () {
-                $this->status = $this->command('spec/tmp/tmp');
+                $this->status = $this->command('tmp/tmp');
             });
             it('return Status::FAILURE', function() {
                 expect($this->status)->toEqual(Status::FAILURE);

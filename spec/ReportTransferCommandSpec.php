@@ -2,7 +2,7 @@
 
 namespace coverallskit\spec;
 
-use coverallskit\command\ReportTransferCommand;
+use coverallskit\ReportTransferCommand;
 use coverallskit\ReportTransferInterface;
 use coverallskit\entity\ReportInterface;
 use Prophecy\Prophet;
@@ -14,7 +14,7 @@ use Aura\Cli\Status;
 
 describe('ReportTransferCommand', function() {
     before(function () {
-        $this->rootDirectory = realpath(__DIR__ . '/../../');
+        $this->rootDirectory = realpath(__DIR__ . '/../');
         $this->tmpDirectory = $this->rootDirectory . '/spec/tmp/clover.xml';
         $this->fixtureDirectory = $this->rootDirectory . '/spec/fixtures/';
 

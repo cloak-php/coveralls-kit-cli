@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace coverallskit\command;
+namespace coverallskit;
 
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
@@ -17,7 +17,7 @@ use Aura\Cli\Status;
 
 /**
  * Class InitializeCommand
- * @package coverallskit\command
+ * @package coverallskit
  */
 class InitializeCommand
 {
@@ -50,7 +50,7 @@ class InitializeCommand
     {
         $destDirectory = $this->getDestDirectory($projectDirectory);
 
-        $templateFile = realpath(__DIR__ . '/../../template/.coveralls.yml');
+        $templateFile = realpath(__DIR__ . '/../template/.coveralls.yml');
         $destFile = $destDirectory . '.coveralls.yml';
 
         if (file_exists($destDirectory) === false) {

@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace coverallskit\command;
+namespace coverallskit;
 
 use coverallskit\ReportTransferAwareTrait;
 use coverallskit\ReportTransferAwareInterface;
@@ -19,10 +19,9 @@ use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\Status;
 
-
 /**
  * Class ReportTransferCommand
- * @package coverallskit\command
+ * @package coverallskit
  */
 class ReportTransferCommand implements ReportTransferAwareInterface
 {
