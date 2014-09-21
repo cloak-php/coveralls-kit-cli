@@ -11,10 +11,8 @@
 
 namespace coverallskit;
 
-use coverallskit\ReportTransferAwareTrait;
-use coverallskit\ReportTransferAwareInterface;
 use coverallskit\Configuration;
-use coverallskit\ReportBuilder;
+use coverallskit\entity\ReportInterface;
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\Status;
@@ -57,14 +55,10 @@ class ReportTransferCommand implements ReportTransferAwareInterface
         $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $configFile;
 
         if (file_exists($configurationPath) === false) {
-            $this->stdio->errln("File $configurationPath is not found");
-            return Status::FAILURE;
+            return $this->configurationFileNotFound($configurationPath);
         }
 
-        $configuration = Configuration::loadFromFile($configurationPath);
-        $reportBuilder = ReportBuilder::fromConfiguration($configuration);
-
-        $report = $reportBuilder->build();
+        $report = $this->createReport($configurationPath);
         $report->save();
 
         $options = $this->context->getopt(['d::']);
@@ -73,6 +67,38 @@ class ReportTransferCommand implements ReportTransferAwareInterface
             return Status::SUCCESS;
         }
 
+        return $this->sendReport($report);
+    }
+
+    /**
+     * @param $configurationPath
+     * @return int
+     */
+    private function configurationFileNotFound($configurationPath)
+    {
+        $this->stdio->errln("File $configurationPath is not found");
+        return Status::FAILURE;
+    }
+
+    /**
+     * @param $configurationPath
+     * @return ReportInterface
+     */
+    private function createReport($configurationPath)
+    {
+        $configuration = Configuration::loadFromFile($configurationPath);
+        $reportBuilder = ReportBuilder::fromConfiguration($configuration);
+
+        $report = $reportBuilder->build();
+
+        return $report;
+    }
+
+    /**
+     * @param ReportInterface $report
+     */
+    private function sendReport(ReportInterface $report)
+    {
         $report->setReportTransfer($this->getReportTransfer());
         $report->upload();
 
