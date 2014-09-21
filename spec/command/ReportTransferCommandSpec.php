@@ -5,19 +5,12 @@ namespace coverallskit\spec\command;
 use coverallskit\command\ReportTransferCommand;
 use coverallskit\ReportTransferInterface;
 use coverallskit\entity\ReportInterface;
-use coverallskit\HelpException;
-use coverallskit\RequireException;
-use coverallskit\ConsoleWrapper;
-use coverallskit\FailureException;
 use Prophecy\Prophet;
 use Prophecy\Argument;
-//use coverallskit\Context;
-
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\CliFactory;
 use Aura\Cli\Status;
-
 
 describe('ReportTransferCommand', function() {
     before(function () {
