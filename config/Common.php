@@ -95,7 +95,7 @@ class Common extends Config
             ]);
             $sendHelp->setSummary('Send to coveralls the report file.');
             $sendHelp->setOptions([
-                'd::' => 'Only generate a report file.'
+                'd::' => 'Will generate a report, but does not send the file.'
             ]);
 
             return $sendHelp;
