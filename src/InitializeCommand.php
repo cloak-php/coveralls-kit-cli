@@ -46,7 +46,6 @@ class InitializeCommand
      */
     private $destDirectoryFilePath;
 
-
     /**
      * @param Context $context
      * @param Stdio $stdio
@@ -66,7 +65,7 @@ class InitializeCommand
         try {
             $this->prepare($projectDirectory);
         } catch (DirectoryNotFoundException $exception) {
-            return $this->directoryNotFound($exception);
+            return $this->failed($exception);
         }
 
         return $this->performAction();
@@ -99,18 +98,12 @@ class InitializeCommand
     }
 
     /**
-     * @param DirectoryNotFoundException $exception
+     * @param Exception $exception
      * @return int
      */
-    private function directoryNotFound(DirectoryNotFoundException $exception)
+    private function failed(Exception $exception)
     {
-        $this->stdio->errln($exception->getMessage());
-        return Status::FAILURE;
-    }
-
-    private function templateCopyFailed($exception)
-    {
-        $this->stdio->errln($exception->getMessage());
+        $exception->printMessage($this->stdio);
         return Status::FAILURE;
     }
 
@@ -122,7 +115,7 @@ class InitializeCommand
         try {
             $this->copyTemplateFile();
         } catch (TemplateCopyFailedException $exception) {
-            return $this->templateCopyFailed($exception);
+            return $this->failed($exception);
         }
 
         return Status::SUCCESS;
