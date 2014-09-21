@@ -16,6 +16,9 @@ use coverallskit\entity\ReportInterface;
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\Status;
+use Eloquent\Pathogen\Factory\PathFactory;
+use Eloquent\Pathogen\RelativePath;
+
 
 /**
  * Class ReportTransferCommand
@@ -47,27 +50,24 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     }
 
     /**
-     * @param $configFile
+     * @param string $relativeConfigFilePath
      * @return int
      */
-    public function __invoke($configFile)
+    public function __invoke($relativeConfigFilePath)
     {
-        $configurationPath = getcwd() . DIRECTORY_SEPARATOR . $configFile;
+        $configFilePath = $this->resolveConfigFilePath($relativeConfigFilePath);
 
-        if (file_exists($configurationPath) === false) {
-            return $this->configurationFileNotFound($configurationPath);
+        if (file_exists($configFilePath) === false) {
+            return $this->configurationFileNotFound($configFilePath);
         }
-
-        $report = $this->createReport($configurationPath);
-        $report->save();
 
         $options = $this->context->getopt(['d::']);
 
         if ($options->get('-d')) {
-            return Status::SUCCESS;
+            return $this->makeReport($configFilePath);
+        } else {
+            return $this->sendReport($configFilePath);
         }
-
-        return $this->sendReport($report);
     }
 
     /**
@@ -95,14 +95,44 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     }
 
     /**
-     * @param ReportInterface $report
+     * @param $configFilePath
+     * @return int
      */
-    private function sendReport(ReportInterface $report)
+    private function makeReport($configFilePath)
     {
+        $report = $this->createReport($configFilePath);
+        $report->save();
+
+        return Status::SUCCESS;
+    }
+
+    /**
+     * @param ReportInterface $report
+     * @return int
+     */
+    private function sendReport($configFilePath)
+    {
+        $report = $this->createReport($configFilePath);
         $report->setReportTransfer($this->getReportTransfer());
+        $report->save();
         $report->upload();
 
         return Status::SUCCESS;
+    }
+
+    /**
+     * @param $configFile
+     * @return string
+     * @throws \Eloquent\Pathogen\Exception\NonRelativePathException
+     */
+    private function resolveConfigFilePath($configFile)
+    {
+        $workDirectory = PathFactory::instance()->create(getcwd());
+
+        $relativeConfigFilePath = RelativePath::fromString($configFile);
+        $configFilePath = $workDirectory->resolve($relativeConfigFilePath);
+
+        return $configFilePath->normalize()->string();
     }
 
 }
