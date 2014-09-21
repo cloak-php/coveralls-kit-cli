@@ -40,6 +40,11 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     private $stdio;
 
     /**
+     * @var \Eloquent\Pathogen\AbsolutePath
+     */
+    private $configFilePath;
+
+    /**
      * @var array
      */
     private $optionRules = ['d::'];
@@ -61,46 +66,66 @@ class ReportTransferCommand implements ReportTransferAwareInterface
      */
     public function __invoke($relativeConfigFilePath)
     {
-        $configFilePath = $this->resolveConfigFilePath($relativeConfigFilePath);
-
-        if (file_exists($configFilePath) === false) {
-            return $this->configurationFileNotFound($configFilePath);
+        try {
+            $this->prepare($relativeConfigFilePath);
+        } catch (ConfigFileNotFoundException $exception) {
+            return $this->configurationFileNotFound($exception);
         }
 
-        return $this->performAction($configFilePath);
+        return $this->performAction();
     }
 
     /**
      * @param $configurationPath
      * @return int
      */
-    private function configurationFileNotFound($configurationPath)
+    private function configurationFileNotFound(ConfigFileNotFoundException $exception)
     {
-        $this->stdio->errln("File $configurationPath is not found");
+        $this->stdio->errln($exception->getMessage());
         return Status::FAILURE;
     }
 
     /**
+     * @param string $configFilePath
+     * @throws \Eloquent\Pathogen\Exception\NonRelativePathException
+     */
+    private function prepare($configFilePath)
+    {
+        $workDirectory = PathFactory::instance()->create(getcwd());
+
+        $relativeConfigFilePath = RelativePath::fromString($configFilePath);
+        $absoluteConfigFilePath = $workDirectory->resolve($relativeConfigFilePath);
+
+        $this->configFilePath = $absoluteConfigFilePath;
+
+        if (file_exists((string) $this->configFilePath)) {
+            return;
+        }
+
+        throw new ConfigFileNotFoundException("File $this->configFilePath is not found");
+    }
+
+    /**
      * @return int
      */
-    private function performAction($configFilePath)
+    private function performAction()
     {
         $options = $this->context->getopt($this->optionRules);
 
         if ($options->get('-d')) {
-            return $this->makeReport($configFilePath);
+            return $this->makeReport();
         } else {
-            return $this->sendReport($configFilePath);
+            return $this->sendReport();
         }
     }
 
     /**
-     * @param $configurationPath
      * @return ReportInterface
      */
-    private function createReport($configurationPath)
+    private function createReport()
     {
-        $configuration = Configuration::loadFromFile($configurationPath);
+        $configFilePath = (string) $this->configFilePath;
+        $configuration = Configuration::loadFromFile($configFilePath);
         $reportBuilder = ReportBuilder::fromConfiguration($configuration);
 
         $report = $reportBuilder->build();
@@ -109,44 +134,27 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     }
 
     /**
-     * @param $configFilePath
      * @return int
      */
-    private function makeReport($configFilePath)
+    private function makeReport()
     {
-        $report = $this->createReport($configFilePath);
+        $report = $this->createReport();
         $report->save();
 
         return Status::SUCCESS;
     }
 
     /**
-     * @param ReportInterface $report
      * @return int
      */
-    private function sendReport($configFilePath)
+    private function sendReport()
     {
-        $report = $this->createReport($configFilePath);
+        $report = $this->createReport();
         $report->setReportTransfer($this->getReportTransfer());
         $report->save();
         $report->upload();
 
         return Status::SUCCESS;
-    }
-
-    /**
-     * @param $configFile
-     * @return string
-     * @throws \Eloquent\Pathogen\Exception\NonRelativePathException
-     */
-    private function resolveConfigFilePath($configFile)
-    {
-        $workDirectory = PathFactory::instance()->create(getcwd());
-
-        $relativeConfigFilePath = RelativePath::fromString($configFile);
-        $configFilePath = $workDirectory->resolve($relativeConfigFilePath);
-
-        return $configFilePath->normalize()->string();
     }
 
 }
