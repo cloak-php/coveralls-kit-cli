@@ -6,7 +6,7 @@ Support the report **lcov**, **clover**.
 
 [![Build Status](https://travis-ci.org/cloak-php/coveralls-kit-cli.svg?branch=master)](https://travis-ci.org/cloak-php/coveralls-kit-cli)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/cloak-php/coveralls-kit-cli/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/cloak-php/coveralls-kit-cli/?branch=master)
-[![Coverage Status](https://coveralls.io/repos/cloak-php/coveralls-kit-cli/badge.png)](https://coveralls.io/r/cloak-php/coveralls-kit-cli)
+[![Coverage Status](https://coveralls.io/repos/cloak-php/coveralls-kit-cli/badge.png?branch=master)](https://coveralls.io/r/cloak-php/coveralls-kit-cli?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/540f97fb9e1622709c000021/badge.svg?style=flat)](https://www.versioneye.com/user/projects/540f97fb9e1622709c000021)
 [![Stories in Ready](https://badge.waffle.io/cloak-php/coveralls-kit-cli.png?label=ready&title=Ready)](https://waffle.io/cloak-php/coveralls-kit-cli)
 
