@@ -57,5 +57,21 @@ describe('InitializeCommand', function() {
                 expect($this->status)->toEqual(Status::FAILURE);
             });
         });
+
+        context('when directory not writable', function() {
+            before(function () {
+                $this->destReadOnlyDirectory = __DIR__ . '/tmp/readonly';
+                chmod($this->destReadOnlyDirectory, 777);
+                chmod($this->destReadOnlyDirectory, 644);
+                $this->status = $this->command('spec/tmp/readonly');
+            });
+            after(function () {
+                chmod($this->destReadOnlyDirectory, 777);
+            });
+            it('return Status::FAILURE', function() {
+                expect($this->status)->toEqual(Status::FAILURE);
+            });
+        });
+
     });
 });
