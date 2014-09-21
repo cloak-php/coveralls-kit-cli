@@ -12,8 +12,8 @@
     "require": {
         "php": ">=5.5.0",
         "aura/cli": "2.*",
-        "aura/cli-kernel": "2.0.*@dev",
-        "aura/project-kernel": "2.0.*@dev",
+        "aura/cli-kernel": "2.0.x@dev",
+        "aura/project-kernel": "2.0.x@dev",
         "aura/di": "2.*@dev",
         "cloak/coverallskit": "1.3.*",
         "monolog/monolog": "1.*",
