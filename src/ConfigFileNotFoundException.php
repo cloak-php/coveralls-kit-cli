@@ -19,4 +19,5 @@ use UnexpectedValueException;
  */
 class ConfigFileNotFoundException extends UnexpectedValueException
 {
+    use PrintFailedMessageTrait;
 }

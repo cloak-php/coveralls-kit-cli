@@ -19,13 +19,5 @@ use UnexpectedValueException;
  */
 class DirectoryNotFoundException extends UnexpectedValueException
 {
-
-    /**
-     * @param Stdio $stdio
-     */
-    public function printMessage(Stdio $stdio)
-    {
-        $stdio->errln($this->getMessage());
-    }
-
+    use PrintFailedMessageTrait;
 }

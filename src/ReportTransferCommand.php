@@ -18,6 +18,7 @@ use Aura\Cli\Context;
 use Aura\Cli\Status;
 use Eloquent\Pathogen\Factory\PathFactory;
 use Eloquent\Pathogen\RelativePath;
+use Exception;
 
 
 /**
@@ -69,20 +70,10 @@ class ReportTransferCommand implements ReportTransferAwareInterface
         try {
             $this->prepare($relativeConfigFilePath);
         } catch (ConfigFileNotFoundException $exception) {
-            return $this->configurationFileNotFound($exception);
+            return $this->failed($exception);
         }
 
         return $this->performAction();
-    }
-
-    /**
-     * @param $configurationPath
-     * @return int
-     */
-    private function configurationFileNotFound(ConfigFileNotFoundException $exception)
-    {
-        $this->stdio->errln($exception->getMessage());
-        return Status::FAILURE;
     }
 
     /**
@@ -117,6 +108,16 @@ class ReportTransferCommand implements ReportTransferAwareInterface
         } else {
             return $this->sendReport();
         }
+    }
+
+    /**
+     * @param Exception $exception
+     * @return int
+     */
+    private function failed(Exception $exception)
+    {
+        $exception->printMessage($this->stdio);
+        return Status::FAILURE;
     }
 
     /**
