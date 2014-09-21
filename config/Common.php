@@ -7,8 +7,7 @@ use coverallskit\ReportTransferCommand;
 use Aura\Di\Config;
 use Aura\Di\Container;
 use Aura\Cli\Help;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Psr\Log\NullLogger;
 
 
 /**
@@ -26,9 +25,13 @@ class Common extends Config
      */
     public function define(Container $di)
     {
-        $di->set('aura/project-kernel:logger', $di->newInstance(Logger::class));
+        $di->set('aura/project-kernel:logger', $di->newInstance(NullLogger::class));
 
         $di->params[InitializeCommand::class] = [
+            'context' => $di->lazyGet('aura/cli-kernel:context'),
+            'stdio' => $di->lazyGet('aura/cli-kernel:stdio')
+        ];
+        $di->params[ReportTransferCommand::class] = [
             'context' => $di->lazyGet('aura/cli-kernel:context'),
             'stdio' => $di->lazyGet('aura/cli-kernel:stdio')
         ];
@@ -40,25 +43,8 @@ class Common extends Config
      */
     public function modify(Container $di)
     {
-        $this->modifyLogger($di);
         $this->modifyCliDispatcher($di);
         $this->modifyCliHelpService($di);
-    }
-
-    /**
-     * @param Container $di
-     * @throws \Aura\Di\Exception\ServiceNotFound
-     */
-    protected function modifyLogger(Container $di)
-    {
-        $project = $di->get('project');
-        $mode = $project->getMode();
-        $file = $project->getPath("tmp/log/{$mode}.log");
-
-        $streamHandler = $di->newInstance(StreamHandler::class, ['stream' => $file]);
-
-        $logger = $di->get('aura/project-kernel:logger');
-        $logger->pushHandler($streamHandler);
     }
 
     /**

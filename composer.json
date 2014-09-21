@@ -2,7 +2,7 @@
     "name": "cloak/coverallskit-cli",
     "type": "library",
     "description": "Command line interface for coverallskit",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "keywords": [
         "cli", "command line", "coveralls", "code coverage", "report"
     ],
@@ -12,11 +12,11 @@
     "require": {
         "php": ">=5.5.0",
         "aura/cli": "2.*",
-        "aura/cli-kernel": "2.0.x@dev",
-        "aura/project-kernel": "2.0.x@dev",
-        "aura/di": "2.0.x@dev",
+        "aura/cli-kernel": "2.0.*@dev",
+        "aura/project-kernel": "2.0.*@dev",
+        "aura/di": "2.0.*@dev",
         "cloak/coverallskit": "1.3.*",
-        "monolog/monolog": "1.*",
+        "psr/log": "1.*",
         "eloquent/pathogen": "0.6.*"
     },
     "require-dev": {
@@ -42,7 +42,6 @@
             "type": "project",
             "config": {
                 "common": "Aura\\Cli_Project\\_Config\\Common",
-                "dev": "Aura\\Cli_Project\\_Config\\Dev",
                 "test": "Aura\\Cli_Project\\_Config\\Test",
                 "prod": "Aura\\Cli_Project\\_Config\\Prod"
             }

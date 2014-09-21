@@ -1,14 +1,23 @@
 #!/usr/bin/env php
 <?php
 
-$files = [
-    __DIR__ . '/../vendor/autoload.php',
-    __DIR__ . '/../../../autoload.php'
+$configs = [
+    [
+        'autoloadFile' => __DIR__ . '/../vendor/autoload.php',
+        'kernelPath' => dirname(__DIR__)
+    ],
+    [
+        'autoloadFile' => __DIR__ . '/../../../autoload.php',
+        'kernelPath' => realpath(__DIR__ . '/../../../../')
+    ]
 ];
 
 $composerInstall = false;
 
-foreach ($files as $file) {
+foreach ($configs as $config) {
+    $file = $config['autoloadFile'];
+    $kernelPath = $config['kernelPath'];
+
     if (file_exists($file)) {
         require $file;
         $composerInstall = true;
@@ -25,10 +34,26 @@ if (!$composerInstall) {
 
 unset($composerInstall, $files, $file);
 
-use Aura\Project_Kernel\Factory;
+use Aura\Di\ContainerBuilder;
+use Aura\Project_Kernel\Project;
 use Aura\Cli_Kernel\CliKernel;
 
-$path = dirname(__DIR__);
-$kernel = (new Factory)->newKernel($path, CliKernel::class);
+require_once __DIR__ . '/../config/_env.php';
+
+$project = new Project(
+    $kernelPath,
+    $_ENV['COVERALLS_KIT_CONFIG_MODE'],
+    json_decode(file_get_contents("{$kernelPath}/composer.json")),
+    json_decode(file_get_contents("{$kernelPath}/vendor/composer/installed.json"))
+);
+
+$builder = new ContainerBuilder();
+
+$args = ['project' => $project];
+$config = $project->getConfigClasses();
+
+$di = $builder->newInstance($args, $config);
+$kernel = $di->newInstance(CliKernel::class);
+
 $status = $kernel();
 exit($status);
