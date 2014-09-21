@@ -1,6 +1,6 @@
 <?php
 
-namespace coverallskit\spec\command;
+namespace coverallskit\spec;
 
 use coverallskit\command\ReportTransferCommand;
 use coverallskit\ReportTransferInterface;
@@ -35,7 +35,7 @@ describe('ReportTransferCommand', function() {
             $this->reportTransfer->getClient()->shouldNotBeCalled();
             $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
 
-            $this->context = $this->factory->newContext();
+            $this->context = $this->factory->newContext([]);
 
             $this->command = new ReportTransferCommand($this->context, $this->stdio);
             $this->command->setReportTransfer($this->reportTransfer->reveal());
@@ -74,7 +74,7 @@ describe('ReportTransferCommand', function() {
 
         context('when configration file not exists', function() {
             before(function () {
-                $this->context = $this->factory->newContext();
+                $this->context = $this->factory->newContext([]);
 
                 $this->command = new ReportTransferCommand($this->context, $this->stdio);
                 $this->status = $this->command('not_found.yml');

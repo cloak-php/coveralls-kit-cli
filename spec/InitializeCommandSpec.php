@@ -1,6 +1,6 @@
 <?php
 
-namespace coverallskit\spec\command;
+namespace coverallskit\spec;
 
 use coverallskit\command\InitializeCommand;
 use Aura\Cli\Stdio;
@@ -11,11 +11,11 @@ use Aura\Cli\Status;
 describe('InitializeCommand', function() {
     describe('__invoke', function() {
         before(function () {
-            $this->destFile = __DIR__ . '/../tmp/.coveralls.yml';
+            $this->destFile = __DIR__ . '/tmp/.coveralls.yml';
 
             $this->factory = new CliFactory();
             $this->stdio = $this->factory->newStdio();
-            $this->context = $this->factory->newContext();
+            $this->context = $this->factory->newContext([]);
             $this->command = new InitializeCommand($this->context, $this->stdio);
         });
         context('when default', function() {
