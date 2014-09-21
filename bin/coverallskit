@@ -1,14 +1,23 @@
 #!/usr/bin/env php
 <?php
 
-$files = [
-    __DIR__ . '/../vendor/autoload.php',
-    __DIR__ . '/../../../autoload.php'
+$configs = [
+    [
+        'autoloadFile' => __DIR__ . '/../vendor/autoload.php',
+        'kernelPath' => dirname(__DIR__)
+    ],
+    [
+        'autoloadFile' => __DIR__ . '/../../../autoload.php',
+        'kernelPath' => realpath(__DIR__ . '/../../../../')
+    ]
 ];
 
 $composerInstall = false;
 
-foreach ($files as $file) {
+foreach ($configs as $config) {
+    $file = $config['autoloadFile'];
+    $kernelPath = $config['kernelPath'];
+
     if (file_exists($file)) {
         require $file;
         $composerInstall = true;
@@ -28,7 +37,6 @@ unset($composerInstall, $files, $file);
 use Aura\Project_Kernel\Factory;
 use Aura\Cli_Kernel\CliKernel;
 
-$path = dirname(__DIR__);
-$kernel = (new Factory)->newKernel($path, CliKernel::class);
+$kernel = (new Factory)->newKernel($kernelPath, CliKernel::class);
 $status = $kernel();
 exit($status);
