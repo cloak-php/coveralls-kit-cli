@@ -11,21 +11,19 @@
 
 namespace coverallskit;
 
+use Aura\Cli\Stdio;
+
 /**
- * Interface CommandInterface
+ * Interface PrintableExceptionInterface
  * @package coverallskit
  */
-interface CommandInterface
+interface PrintableExceptionInterface
 {
 
     /**
-     * @return string
+     * @param Stdio $stdio
+     * @return void
      */
-    public function getUsageMessage();
-
-    /**
-     * @throws FailureException
-     */
-    public function execute(ConsoleWrapperInterface $console);
+    public function printMessage(Stdio $stdio);
 
 }

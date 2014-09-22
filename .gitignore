@@ -1,0 +1,6 @@
+script/coveralls.json
+script/report.lcov
+spec/tmp/coveralls.json
+spec/tmp/clover.xml
+tmp/log/dev.log
+
