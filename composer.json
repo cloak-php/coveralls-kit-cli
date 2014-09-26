@@ -37,6 +37,9 @@
             "Aura\\Cli_Project\\_Config\\": "config/"
         }
     },
+    "scripts": {
+        "test": "php script/coverage.php"
+    },
     "extra": {
         "aura": {
             "type": "project",
