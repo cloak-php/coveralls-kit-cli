@@ -22,7 +22,7 @@
     "require-dev": {
         "danielstjules/pho": "dev-master",
         "phpspec/prophecy": "1.2.*",
-        "cloak/lcov-reporter": "1.1.*"
+        "cloak/cloak": "1.3.*"
     },
     "license": "MIT",
     "authors": [
