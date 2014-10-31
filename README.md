@@ -20,7 +20,7 @@ Support the report **lcov**, **clover**.
 Please add the following to composer.json.  
 Then please run the composer install.
 
-	"cloak/coverallskit-cli": "1.0.2"
+	"cloak/coverallskit-cli": "1.0.2.1"
 
 ## Basic usage
 
