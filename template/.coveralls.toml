@@ -7,3 +7,9 @@ output = "tmp/coveralls.json"
 [reportFile.input]
 type = "clover"
 file = "tmp/clover.xml"
+
+# LCOV format
+#
+# [reportFile.input]
+# type = "lcov"
+# file = "tmp/report.lcov"
