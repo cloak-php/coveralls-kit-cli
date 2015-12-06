@@ -6,7 +6,7 @@ before_install:
   - composer self-update
   - composer install
 script:
-  - php script/coverage.php
+  - composer test
 after_script:
   - php bin/coverallskit send .cli-coveralls.yml
 notifications:
