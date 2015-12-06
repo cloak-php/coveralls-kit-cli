@@ -17,28 +17,27 @@ Support the report **lcov**, **clover**.
 
 ## Install
 
-Please add the following to composer.json.  
-Then please run the composer install.
+Please execute the following command.
 
-	"cloak/coverallskit-cli": "1.0.2.1"
+	composer require cloak/coverallskit-cli --dev
 
 ## Basic usage
 
 First of all, please perform the setup.  
 When the command is executed, the configuration file will be generated.  
-The file name is **.coveralls.yml**.
+The file name is **.coveralls.toml**.
 
 	vendor/bin/coverallskit init
 
 Send the report in coveralls **send** command.  
 write to the configuration file specified in the report.
 
-	vendor/bin/coverallskit send .coveralls.yml
+	vendor/bin/coverallskit send .coveralls.toml
 
 ## Configuration file format 
 
 Please look at the documentation for [coveralls-kit](https://github.com/cloak-php/coveralls-kit) for a description of the configuration file.
 
-## Run only unit test
+## Run the unit test
 
-	vendor/bin/pho --stop
+	composer test
