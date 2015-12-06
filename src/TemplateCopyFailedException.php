@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * Class TemplateCopyFailedException
  * @package coverallskit
  */
-class TemplateCopyFailedException extends UnexpectedValueException implements PrintableExceptionInterface
+class TemplateCopyFailedException extends UnexpectedValueException implements PrintableException
 {
     /**
      * @param Stdio $stdio

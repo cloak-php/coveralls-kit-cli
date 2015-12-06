@@ -23,7 +23,7 @@ describe(ReportTransferCommand::class, function() {
     });
 
     describe('__invoke', function() {
-        context('when use debug option', function() {
+        context('when default', function() {
             beforeEach(function () {
                 $content = file_get_contents($this->fixtureDirectory . 'clover.xml');
                 $content = sprintf($content, $this->rootDirectory, $this->rootDirectory);
@@ -36,13 +36,15 @@ describe(ReportTransferCommand::class, function() {
                 $this->reportTransfer->getClient()->shouldNotBeCalled();
                 $this->reportTransfer->upload(Argument::type(ReportEntity::class))->shouldBeCalled();
 
-                $this->context = $this->factory->newContext([]);
+                $this->context = $this->factory->newContext([
+                    'argv' => [ '-c', 'spec/fixtures/coveralls.toml' ]
+                ]);
 
                 $this->command = new ReportTransferCommand($this->context, $this->stdio);
                 $this->command->setReportTransfer($this->reportTransfer->reveal());
 
                 $command = $this->command;
-                $this->status = $command('spec/fixtures/coveralls.toml');
+                $this->status = $command();
             });
             it('transfer report file', function() {
                 $this->prophet->checkPredictions();
@@ -61,13 +63,13 @@ describe(ReportTransferCommand::class, function() {
                 $this->reportTransfer->upload()->shouldNotBeCalled();
 
                 $this->context = $this->factory->newContext([
-                    'argv' => ['-d']
+                    'argv' => [ '-d', '--config=spec/fixtures/coveralls.toml' ]
                 ]);
                 $this->command = new ReportTransferCommand($this->context, $this->stdio);
                 $this->command->setReportTransfer($this->reportTransfer->reveal());
 
                 $command = $this->command;
-                $this->status = $command('spec/fixtures/coveralls.toml');
+                $this->status = $command();
             });
             it('only generate report file', function() {
                 $this->prophet->checkPredictions();
@@ -78,12 +80,14 @@ describe(ReportTransferCommand::class, function() {
         });
         context('when configration file not exists', function() {
             beforeEach(function () {
-                $this->context = $this->factory->newContext([]);
+                $this->context = $this->factory->newContext([
+                    'argv' => [ '--debug', '--config=not_found.toml' ]
+                ]);
 
                 $this->command = new ReportTransferCommand($this->context, $this->stdio);
                 $command = $this->command;
 
-                $this->status = $command('not_found.toml');
+                $this->status = $command();
             });
             it('return Status::FAILURE', function() {
                 expect($this->status)->toEqual(Status::FAILURE);

@@ -18,7 +18,6 @@ use Aura\Cli\Context;
 use Aura\Cli\Status;
 use Eloquent\Pathogen\Factory\PathFactory;
 use Eloquent\Pathogen\RelativePath;
-use Exception;
 
 
 /**
@@ -48,7 +47,12 @@ class ReportTransferCommand implements ReportTransferAware
     /**
      * @var array
      */
-    private $optionRules = ['d::'];
+    private $optionRules = [
+        'c::',
+        'd::',
+        'config::',
+        'debug::'
+    ];
 
 
     /**
@@ -62,13 +66,12 @@ class ReportTransferCommand implements ReportTransferAware
     }
 
     /**
-     * @param string $relativeConfigFilePath
      * @return int
      */
-    public function __invoke($relativeConfigFilePath)
+    public function __invoke()
     {
         try {
-            $this->prepare($relativeConfigFilePath);
+            $this->prepare();
         } catch (ConfigFileNotFoundException $exception) {
             return $this->failed($exception);
         }
@@ -77,11 +80,11 @@ class ReportTransferCommand implements ReportTransferAware
     }
 
     /**
-     * @param string $configFilePath
      * @throws \Eloquent\Pathogen\Exception\NonRelativePathException
      */
-    private function prepare($configFilePath)
+    private function prepare()
     {
+        $configFilePath = $this->configurationFile();
         $workDirectory = PathFactory::instance()->create(getcwd());
 
         $relativeConfigFilePath = RelativePath::fromString($configFilePath);
@@ -103,7 +106,7 @@ class ReportTransferCommand implements ReportTransferAware
     {
         $options = $this->context->getopt($this->optionRules);
 
-        if ($options->get('-d')) {
+        if ($options->get('-d') || $options->get('--debug')) {
             return $this->makeReport();
         } else {
             return $this->sendReport();
@@ -111,13 +114,31 @@ class ReportTransferCommand implements ReportTransferAware
     }
 
     /**
-     * @param PrintableExceptionInterface $exception
+     * @param PrintableException $exception
      * @return int
      */
-    private function failed(PrintableExceptionInterface $exception)
+    private function failed(PrintableException $exception)
     {
         $exception->printMessage($this->stdio);
         return Status::FAILURE;
+    }
+
+    private function configurationFile()
+    {
+        $path = null;
+        $names = [ '-c', '--config' ];
+        $options = $this->context->getopt($this->optionRules);
+
+        foreach ($names as $name) {
+            $path = $options->get($name);
+
+            if ($path === null) {
+                continue;
+            }
+            break;
+        }
+
+        return ($path !== null) ? $path : '.coveralls.toml';
     }
 
     /**
