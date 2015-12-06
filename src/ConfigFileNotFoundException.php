@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * Class ConfigFileNotFoundException
  * @package coverallskit
  */
-class ConfigFileNotFoundException extends UnexpectedValueException implements PrintableExceptionInterface
+class ConfigFileNotFoundException extends UnexpectedValueException implements PrintableException
 {
     /**
      * @param Stdio $stdio

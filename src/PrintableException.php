@@ -14,10 +14,10 @@ namespace coverallskit;
 use Aura\Cli\Stdio;
 
 /**
- * Interface PrintableExceptionInterface
+ * Interface PrintableException
  * @package coverallskit
  */
-interface PrintableExceptionInterface
+interface PrintableException
 {
 
     /**

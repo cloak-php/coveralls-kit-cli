@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * Class DirectoryNotFoundException
  * @package coverallskit
  */
-class DirectoryNotFoundException extends UnexpectedValueException implements PrintableExceptionInterface
+class DirectoryNotFoundException extends UnexpectedValueException implements PrintableException
 {
     /**
      * @param Stdio $stdio
