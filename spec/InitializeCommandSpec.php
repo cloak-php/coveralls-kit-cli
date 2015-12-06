@@ -11,7 +11,7 @@ use Aura\Cli\Status;
 describe('InitializeCommand', function() {
     describe('__invoke', function() {
         before(function () {
-            $this->destFile = __DIR__ . '/tmp/.coveralls.yml';
+            $this->destFile = __DIR__ . '/tmp/.coveralls.toml';
 
             $this->factory = new CliFactory();
             $this->stdio = $this->factory->newStdio();
@@ -35,7 +35,7 @@ describe('InitializeCommand', function() {
 
         context('when not specify a project directory', function() {
             before(function () {
-                $this->destFile = getcwd() . '/.coveralls.yml';
+                $this->destFile = getcwd() . '/.coveralls.toml';
                 $this->status = $this->command();
             });
             after(function () {
