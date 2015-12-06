@@ -29,10 +29,13 @@ The file name is **.coveralls.toml**.
 
 	vendor/bin/coverallskit init
 
-Send the report in coveralls **send** command.  
-write to the configuration file specified in the report.
+It will send a report to coveralls in the send command.  
 
-	vendor/bin/coverallskit send .coveralls.toml
+	vendor/bin/coverallskit send
+
+or
+
+	vendor/bin/coverallskit send -c .coveralls.toml
 
 ## Configuration file format 
 
