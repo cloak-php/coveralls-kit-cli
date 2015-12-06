@@ -21,7 +21,8 @@
     "require-dev": {
         "danielstjules/pho": "~1.1",
         "phpspec/prophecy": "~1.5",
-        "cloak/cloak": "~2.1"
+        "peridot-php/peridot": "^1.16",
+        "cloak/peridot-cloak-plugin": "^2.0"
     },
     "license": "MIT",
     "authors": [
