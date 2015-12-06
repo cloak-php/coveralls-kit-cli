@@ -1,0 +1,10 @@
+token = "test"
+service = "travis-ci"
+repositoryDirectory = "../../"
+
+[reportFile]
+output = "../tmp/coveralls.json"
+
+[reportFile.input]
+type = "clover"
+file = "../tmp/clover.xml"

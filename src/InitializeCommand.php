@@ -76,7 +76,7 @@ class InitializeCommand
     private function prepare($projectDirectory = null)
     {
         $projectRelativeDirectory = $projectDirectory;
-        $configFilePath = RelativePath::fromString('.coveralls.yml');
+        $configFilePath = RelativePath::fromString('.coveralls.toml');
         $destDirectoryPath = PathFactory::instance()->create(getcwd());
 
         if (is_null($projectRelativeDirectory)) {
@@ -125,7 +125,7 @@ class InitializeCommand
      */
     private function copyTemplateFile()
     {
-        $templateFile = realpath(__DIR__ . '/../template/.coveralls.yml');
+        $templateFile = realpath(__DIR__ . '/../template/.coveralls.toml');
 
         if (copy($templateFile, (string) $this->destDirectoryFilePath)) {
             return;

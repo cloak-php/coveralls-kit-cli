@@ -10,18 +10,19 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "aura/cli": "2.*",
-        "aura/cli-kernel": "2.*",
-        "aura/project-kernel": "2.*",
-        "aura/di": "2.0.*",
-        "cloak/coverallskit": "1.3.*",
-        "psr/log": "1.*",
-        "eloquent/pathogen": "0.6.*"
+        "aura/cli": "~2.1",
+        "aura/cli-kernel": "~2.0",
+        "aura/project-kernel": "~2.1",
+        "aura/di": "~2.2",
+        "cloak/coverallskit": "~2.2",
+        "psr/log": "~1.0",
+        "eloquent/pathogen": "~0.6"
     },
     "require-dev": {
-        "danielstjules/pho": "dev-master",
-        "phpspec/prophecy": "1.2.*",
-        "cloak/cloak": "1.3.*"
+        "phpspec/prophecy": "~1.5",
+        "peridot-php/peridot": "^1.16",
+        "cloak/peridot-cloak-plugin": "^2.0",
+        "expect/peridot-expect-plugin": "~3.0"
     },
     "license": "MIT",
     "authors": [
@@ -37,7 +38,8 @@
         }
     },
     "scripts": {
-        "test": "php script/coverage.php"
+        "test": "vendor/bin/peridot -g *Spec.php spec",
+        "coveralls": "bin/coverallskit send .cli-coveralls.toml"
     },
     "extra": {
         "aura": {
@@ -48,5 +50,7 @@
                 "prod": "Aura\\Cli_Project\\_Config\\Prod"
             }
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

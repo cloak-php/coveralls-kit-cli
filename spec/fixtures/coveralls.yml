@@ -1,7 +1,0 @@
-service: travis-ci
-reportFile:
-  input:
-    type: clover
-    file: ../tmp/clover.xml
-  output: ../tmp/coveralls.json
-repositoryDirectory: ../../

@@ -1,8 +1,0 @@
-service: travis-ci
-reportFile:
-  input:
-    type: lcov
-    file: script/report.lcov
-  output: script/coveralls.json
-repositoryDirectory: .
-

@@ -12,7 +12,7 @@
 namespace coverallskit;
 
 use coverallskit\Configuration;
-use coverallskit\entity\ReportInterface;
+use coverallskit\entity\ReportEntity;
 use Aura\Cli\Stdio;
 use Aura\Cli\Context;
 use Aura\Cli\Status;
@@ -25,7 +25,7 @@ use Exception;
  * Class ReportTransferCommand
  * @package coverallskit
  */
-class ReportTransferCommand implements ReportTransferAwareInterface
+class ReportTransferCommand implements ReportTransferAware
 {
 
     use ReportTransferAwareTrait;
@@ -121,13 +121,13 @@ class ReportTransferCommand implements ReportTransferAwareInterface
     }
 
     /**
-     * @return ReportInterface
+     * @return ReportEntity
      */
     private function createReport()
     {
         $configFilePath = (string) $this->configFilePath;
-        $configuration = Configuration::loadFromFile($configFilePath);
-        $reportBuilder = ReportBuilder::fromConfiguration($configuration);
+        $configuration = BuilderConfiguration::loadFromFile($configFilePath);
+        $reportBuilder = CoverallsReportBuilder::fromConfiguration($configuration);
 
         $report = $reportBuilder->build();
 

@@ -8,10 +8,10 @@ use Aura\Cli\Context;
 use Aura\Cli\CliFactory;
 use Aura\Cli\Status;
 
-describe('InitializeCommand', function() {
+describe(InitializeCommand::class, function() {
     describe('__invoke', function() {
-        before(function () {
-            $this->destFile = __DIR__ . '/tmp/.coveralls.yml';
+        beforeEach(function () {
+            $this->destFile = __DIR__ . '/tmp/.coveralls.toml';
 
             $this->factory = new CliFactory();
             $this->stdio = $this->factory->newStdio();
@@ -19,10 +19,11 @@ describe('InitializeCommand', function() {
             $this->command = new InitializeCommand($this->context, $this->stdio);
         });
         context('when specify a project directory', function() {
-            before(function () {
-                $this->status = $this->command('spec/tmp');
+            beforeEach(function () {
+                $command = $this->command;
+                $this->status = $command('spec/tmp');
             });
-            after(function () {
+            afterEach(function () {
                 unlink($this->destFile);
             });
             it('copy template file', function() {
@@ -34,11 +35,13 @@ describe('InitializeCommand', function() {
         });
 
         context('when not specify a project directory', function() {
-            before(function () {
-                $this->destFile = getcwd() . '/.coveralls.yml';
-                $this->status = $this->command();
+            beforeEach(function () {
+                $this->destFile = getcwd() . '/.coveralls.toml';
+
+                $command = $this->command;
+                $this->status = $command();
             });
-            after(function () {
+            afterEach(function () {
                 unlink($this->destFile);
             });
             it('copy template file', function() {
@@ -50,8 +53,9 @@ describe('InitializeCommand', function() {
         });
 
         context('when directory not found', function() {
-            before(function () {
-                $this->status = $this->command('tmp/tmp');
+            beforeEach(function () {
+                $command = $this->command;
+                $this->status = $command('tmp/tmp');
             });
             it('return Status::FAILURE', function() {
                 expect($this->status)->toEqual(Status::FAILURE);
@@ -59,11 +63,14 @@ describe('InitializeCommand', function() {
         });
 
         context('when directory not writable', function() {
-            before(function () {
+            beforeEach(function () {
                 $this->destReadOnlyDirectory = __DIR__ . '/tmp/readonly';
                 mkdir($this->destReadOnlyDirectory);
                 chmod($this->destReadOnlyDirectory, 644);
-                $this->status = $this->command('spec/tmp/readonly');
+
+                $command = $this->command;
+                $this->status = $command('spec/tmp/readonly');
+
                 chmod($this->destReadOnlyDirectory, 777);
                 rmdir($this->destReadOnlyDirectory);
             });
