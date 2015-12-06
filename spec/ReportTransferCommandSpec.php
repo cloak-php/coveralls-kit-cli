@@ -39,7 +39,8 @@ describe('ReportTransferCommand', function() {
 
             $this->command = new ReportTransferCommand($this->context, $this->stdio);
             $this->command->setReportTransfer($this->reportTransfer->reveal());
-            $this->status = $this->command('spec/fixtures/coveralls.yml');
+
+            $this->status = $this->command('spec/fixtures/coveralls.toml');
         });
         it('transfer report file', function() {
             $this->prophet->checkPredictions();
@@ -47,7 +48,6 @@ describe('ReportTransferCommand', function() {
         it('return Status::SUCCESS', function() {
             expect($this->status)->toEqual(Status::SUCCESS);
         });
-
         context('when use debug option', function() {
             before(function () {
                 $this->prophet = new Prophet();
@@ -62,7 +62,7 @@ describe('ReportTransferCommand', function() {
                 ]);
                 $this->command = new ReportTransferCommand($this->context, $this->stdio);
                 $this->command->setReportTransfer($this->reportTransfer->reveal());
-                $this->status = $this->command('spec/fixtures/coveralls.yml');
+                $this->status = $this->command('spec/fixtures/coveralls.toml');
             });
             it('only generate report file', function() {
                 $this->prophet->checkPredictions();
@@ -71,13 +71,12 @@ describe('ReportTransferCommand', function() {
                 expect($this->status)->toEqual(Status::SUCCESS);
             });
         });
-
         context('when configration file not exists', function() {
             before(function () {
                 $this->context = $this->factory->newContext([]);
 
                 $this->command = new ReportTransferCommand($this->context, $this->stdio);
-                $this->status = $this->command('not_found.yml');
+                $this->status = $this->command('not_found.toml');
             });
             it('return Status::FAILURE', function() {
                 expect($this->status)->toEqual(Status::FAILURE);
