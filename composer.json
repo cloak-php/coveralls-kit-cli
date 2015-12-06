@@ -19,7 +19,6 @@
         "eloquent/pathogen": "~0.6"
     },
     "require-dev": {
-        "danielstjules/pho": "~1.1",
         "phpspec/prophecy": "~1.5",
         "peridot-php/peridot": "^1.16",
         "cloak/peridot-cloak-plugin": "^2.0",
@@ -39,7 +38,7 @@
         }
     },
     "scripts": {
-        "test": "php script/coverage.php"
+        "test": "vendor/bin/peridot -g *Spec.php spec"
     },
     "extra": {
         "aura": {
