@@ -8,7 +8,7 @@ before_install:
 script:
   - composer test
 after_script:
-  - php bin/coverallskit send .cli-coveralls.yml
+  - php bin/coverallskit send .coveralls.toml
 notifications:
   email: false
 sudo: false
