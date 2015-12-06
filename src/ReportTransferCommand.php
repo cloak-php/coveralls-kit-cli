@@ -18,7 +18,6 @@ use Aura\Cli\Context;
 use Aura\Cli\Status;
 use Eloquent\Pathogen\Factory\PathFactory;
 use Eloquent\Pathogen\RelativePath;
-use Exception;
 
 
 /**
@@ -115,10 +114,10 @@ class ReportTransferCommand implements ReportTransferAware
     }
 
     /**
-     * @param PrintableExceptionInterface $exception
+     * @param PrintableException $exception
      * @return int
      */
-    private function failed(PrintableExceptionInterface $exception)
+    private function failed(PrintableException $exception)
     {
         $exception->printMessage($this->stdio);
         return Status::FAILURE;
