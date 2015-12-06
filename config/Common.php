@@ -69,7 +69,7 @@ class Common extends Config
         $initHelp = $di->newInstance(Help::class);
         $helpService->set('init', function () use ($initHelp) {
             $initHelp->setUsage(['', '<project-directory>']);
-            $initHelp->setSummary('Create a coveralls.yml file.');
+            $initHelp->setSummary('Create a .coveralls.toml file.');
 
             return $initHelp;
         });
@@ -77,11 +77,12 @@ class Common extends Config
         $sendHelp = $di->newInstance(Help::class);
         $helpService->set('send', function () use ($sendHelp) {
             $sendHelp->setUsage([
-                '<config-file> [<options>]'
+                '[<options>]'
             ]);
             $sendHelp->setSummary('Send to coveralls the report file.');
             $sendHelp->setOptions([
-                'd::' => 'Will generate a report, but does not send the file.'
+                'c,config' => 'coveralls-kit configuration path. (default: .coveralls.toml)',
+                'd,debug' => 'Will generate a report, but does not send the file.'
             ]);
 
             return $sendHelp;
