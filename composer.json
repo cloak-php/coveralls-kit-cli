@@ -39,7 +39,7 @@
     },
     "scripts": {
         "test": "vendor/bin/peridot -g *Spec.php spec",
-        "coveralls": "bin/coverallskit send .coveralls.toml"
+        "coveralls": "bin/coverallskit send .cli-coveralls.toml"
     },
     "extra": {
         "aura": {
