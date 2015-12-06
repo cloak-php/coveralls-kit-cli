@@ -3,8 +3,8 @@
 namespace coverallskit\spec;
 
 use coverallskit\ReportTransferCommand;
-use coverallskit\ReportTransferInterface;
-use coverallskit\entity\ReportInterface;
+use coverallskit\ReportTransfer;
+use coverallskit\entity\ReportEntity;
 use Prophecy\Prophet;
 use Prophecy\Argument;
 use Aura\Cli\Stdio;
@@ -30,10 +30,10 @@ describe('ReportTransferCommand', function() {
 
             $this->prophet = new Prophet();
 
-            $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
+            $this->reportTransfer = $this->prophet->prophesize(ReportTransfer::class);
             $this->reportTransfer->setClient()->shouldNotBeCalled();
             $this->reportTransfer->getClient()->shouldNotBeCalled();
-            $this->reportTransfer->upload(Argument::type(ReportInterface::class))->shouldBeCalled();
+            $this->reportTransfer->upload(Argument::type(ReportEntity::class))->shouldBeCalled();
 
             $this->context = $this->factory->newContext([]);
 
@@ -52,7 +52,7 @@ describe('ReportTransferCommand', function() {
             before(function () {
                 $this->prophet = new Prophet();
 
-                $this->reportTransfer = $this->prophet->prophesize(ReportTransferInterface::class);
+                $this->reportTransfer = $this->prophet->prophesize(ReportTransfer::class);
                 $this->reportTransfer->setClient()->shouldNotBeCalled();
                 $this->reportTransfer->getClient()->shouldNotBeCalled();
                 $this->reportTransfer->upload()->shouldNotBeCalled();
